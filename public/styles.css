@@ -1,0 +1,197 @@
+/* Import Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
+
+/* Root Variables */
+:root {
+  --primary-color: #3498db;
+  --primary-hover: #2980b9;
+  --secondary-color: #2ecc71;
+  --secondary-hover: #27ae60;
+  --danger-color: #e74c3c;
+  --danger-hover: #c0392b;
+  --bg-light: #f8f9fa;
+  --bg-dark: #2c3e50;
+  --text-dark: #333333;
+  --border-radius: 10px;
+  --transition-speed: 0.3s ease-in-out;
+}
+
+/* Body and Typography */
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  padding: 20px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+/* Navigation Bar */
+nav {
+  background-color: var(--primary-color);
+  padding: 10px;
+  border-radius: var(--border-radius);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav a {
+  color: white;
+  font-weight: 600;
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+nav a:hover {
+  color: var(--secondary-color);
+}
+
+/* Layout Hierarchy */
+.hierarchy {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Subjects, Chapters, and Components Styling */
+.subject, .chapter, .component {
+  background-color: white;
+  padding: 12px;
+  border-radius: var(--border-radius);
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 8px;
+  transition: var(--transition-speed);
+}
+
+/* Hover Effect for Clickable Items */
+.subject:hover, .chapter:hover {
+  background-color: #f3f3f3;
+}
+
+/* Subject Header */
+.subject-header, .chapter-header {
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 8px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Progress Bar */
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background-color: #ecf0f1;
+  border-radius: var(--border-radius);
+  margin-top: 8px;
+}
+
+.progress {
+  height: 100%;
+  background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+  transition: width var(--transition-speed);
+}
+
+/* Accordion */
+.subject-content, .chapter-content {
+  display: none;
+  padding-left: 15px;
+}
+
+.subject-content.active, .chapter-content.active {
+  display: block;
+}
+
+/* Buttons */
+button {
+  padding: 6px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  border-radius: var(--border-radius);
+  transition: var(--transition-speed);
+}
+
+button.small {
+  font-size: 12px;
+  padding: 4px 8px;
+}
+
+button.primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+button.primary:hover {
+  background-color: var(--primary-hover);
+}
+
+button.secondary {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+button.secondary:hover {
+  background-color: var(--secondary-hover);
+}
+
+button.danger {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+button.danger:hover {
+  background-color: var(--danger-hover);
+}
+
+/* Align Buttons Inline */
+.button-group {
+  display: flex;
+  gap: 8px;
+}
+
+/* Fix Large Component Box Issue */
+.component {
+  padding: 10px;
+  font-size: 14px;
+  max-width: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: var(--transition-speed);
+}
+
+/* Move Checkbox to Right */
+.component label {
+  flex-grow: 1;
+}
+
+.component input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hierarchy {
+    gap: 10px;
+  }
+  
+  .subject-header, .chapter-header {
+    font-size: 16px;
+  }
+  
+  button {
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+
+  .component {
+    font-size: 12px;
+  }
+}
