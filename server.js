@@ -9,18 +9,15 @@ const session = require("express-session")
 const app = express()
 const port = process.env.PORT || 3000
 const { Pool } = require('pg');
+
 // Database connection
 const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-  connectionString: process.env.DATABASE_URL, // This will point to the Render database
-  ssl: {
-    rejectUnauthorized: false, // Use this for SSL connection in production
-  },
+  connectionString: process.env.DATABASE_URL, // Render PostgreSQL connection string
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false, // SSL only in production
 });
+
+module.exports = pool;
+
 
 
 app.set("view engine", "ejs")
