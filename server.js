@@ -16,6 +16,10 @@ const pool = new Pool({
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
+  connectionString: process.env.DATABASE_URL, // This will point to the Render database
+  ssl: {
+    rejectUnauthorized: false, // Use this for SSL connection in production
+  },
 });
 
 
