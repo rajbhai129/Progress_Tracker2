@@ -1,22 +1,25 @@
 require("dotenv").config()
 const express = require("express")
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"; // Add this line
 
+console.log("Backend API URL:", API_URL); // Debugging log
 const bodyParser = require("body-parser")
 const path = require("path")
 const bcrypt = require("bcrypt")
 const session = require("express-session")
-
+const pgSession = require("connect-pg-simple")(session);
 const app = express()
 const port = process.env.PORT || 3000
 const { Pool } = require('pg');
 
-// Database connection
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL, // Render PostgreSQL connection string
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false, // SSL only in production
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }, // Always use SSL for production
 });
 
+
 module.exports = pool;
+
 
 
 
@@ -30,7 +33,11 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false }, // set to true if using HTTPS
+    cookie: { 
+      secure: process.env.NODE_ENV === "production", // Set true for HTTPS
+      httpOnly: true, // Prevent client-side access
+      sameSite: "Lax", // Needed for cross-site requests
+    },
   }),
 )
 
