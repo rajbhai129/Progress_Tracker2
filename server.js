@@ -1,27 +1,22 @@
 require("dotenv").config()
 const express = require("express")
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"; // Add this line
-
-console.log("Backend API URL:", API_URL); // Debugging log
+const { Pool } = require("pg")
 const bodyParser = require("body-parser")
 const path = require("path")
 const bcrypt = require("bcrypt")
 const session = require("express-session")
-const pgSession = require("connect-pg-simple")(session);
+
 const app = express()
 const port = process.env.PORT || 3000
-const { Pool } = require('pg');
 
+// Database connection using environment variables
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }, // Always use SSL for production
-});
-
-
-module.exports = pool;
-
-
-
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
+})
 
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views")) // Ensure views directory is set
@@ -30,16 +25,15 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET, // Use session secret from env
     resave: false,
     saveUninitialized: false,
-    cookie: { 
-      secure: process.env.NODE_ENV === "production", // Set true for HTTPS
-      httpOnly: true, // Prevent client-side access
-      sameSite: "Lax", // Needed for cross-site requests
-    },
+    cookie: { secure: false }, // set to true if using HTTPS
   }),
 )
+
+// Your routes and other code...
+
 
 // Middleware to check if user is authenticated
 const isAuthenticated = (req, res, next) => {
