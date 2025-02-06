@@ -36,11 +36,12 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: true, // Enable secure cookies for HTTPS
+    secure: process.env.NODE_ENV === "production", // Set to true only in production
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000, // 1 day
-    sameSite: "none" // Allow cross-origin session sharing
+    sameSite: "lax" // Ensure session works across domains
   }
+  
 }));
 
 
@@ -55,8 +56,10 @@ app.use((req, res, next) => {
 
 
 app.use(cors({
-  origin: "https://progress-tracker-1mb9.onrender.com", // Replace with your frontend URL
-  credentials: true
+  origin: "https://progress-tracker-1mb9.onrender.com",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 app.set("view engine", "ejs");
@@ -93,27 +96,31 @@ app.post("/login", async (req, res) => {
       const user = result.rows[0];
       const isMatch = await bcrypt.compare(password, user.password);
       if (isMatch) {
-        // Set session data
         req.session.userId = user.id;
         req.session.username = user.username;
-        
-        // Save session and redirect
-        return req.session.save((err) => {
+
+        console.log("✅ Before saving session:", req.session);
+
+        req.session.save((err) => {
           if (err) {
-            console.error("Session save error:", err);
+            console.error("❌ Session save error:", err);
             return res.render("login", { error: "Login error. Please try again." });
           }
-          // Redirect after successful save
-          res.redirect("/dashboard");
+          console.log("✅ Session saved successfully:", req.session);
+          return res.redirect("/dashboard");
         });
+
+        return; // Prevent duplicate responses
       }
     }
     res.render("login", { error: "Invalid credentials" });
   } catch (err) {
-    console.error("Login error:", err);
+    console.error("❌ Login error:", err);
     res.render("login", { error: "An error occurred" });
   }
 });
+
+
 
 app.get("/register", (req, res) => {
   res.render("register");
@@ -155,28 +162,16 @@ app.get("/logout", (req, res) => {
   });
 });
 
-app.get("/dashboard", isAuthenticated, async (req, res) => {
-  try {
-    const userResult = await pool.query(
-      "SELECT username, email FROM users WHERE id = $1",
-      [req.session.userId]
-    );
-
-    if (!userResult.rows.length) {
-      req.session.destroy();
-      return res.redirect("/login");
-    }
-
-    res.render("dashboard", {
-      user: userResult.rows[0],
-      userId: req.session.userId,
-      username: userResult.rows[0].username
-    });
-  } catch (err) {
-    console.error("Dashboard error:", err);
-    res.render("error", { error: "Error loading dashboard" });
+app.get("/dashboard", (req, res) => {
+  console.log("🔍 Session at /dashboard:", req.session);
+  if (!req.session.userId) {
+    console.log("❌ User not logged in, redirecting to login");
+    return res.redirect("/login");
   }
+  console.log("✅ User is logged in, rendering dashboard");
+  res.render("dashboard", { user: req.session.userId });
 });
+
 // Additional routes for subjects, chapters, components, etc. should also return after sending a response
 // For brevity, they are left unchanged but ensure you follow the pattern of returning responses or calling next(err).
 /*app.get("/", isAuthenticated, async (req, res) => {
