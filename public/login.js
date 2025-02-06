@@ -7,12 +7,11 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const response = await fetch("/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
-        credentials: "include", // Ensures cookies (session) are sent
+        credentials: "include"  // Must be included!
       });
+      
       if (response.ok) {
         window.location.href = "/dashboard";
       } else {

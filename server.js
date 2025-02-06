@@ -31,18 +31,20 @@ pool.connect()
 // Use connect-pg-simple for session storage, reusing the same pool
 app.use(session({
   store: new PgSession({ pool: pool, tableName: "session" }),
-  name: 'sid',
-  secret: process.env.SESSION_SECRET,
+  name: "sid",
+  secret: process.env.SESSION_SECRET || "your-secret-key",
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === "production", // Set to true only in production
+    secure: process.env.NODE_ENV === "production",
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000, // 1 day
-    sameSite: "lax" // Ensure session works across domains
+    sameSite: "none" // Final fix: 'none' for cross-origin persistence
   }
-  
 }));
+
+
+
 
 
 app.use((req, res, next) => {
@@ -55,12 +57,12 @@ app.use((req, res, next) => {
 });
 
 
+
 app.use(cors({
   origin: "https://progress-tracker-1mb9.onrender.com",
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  credentials: true  
 }));
+
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views")); // Ensure views directory is set
@@ -177,7 +179,7 @@ app.get("/dashboard", (req, res) => {
 /*app.get("/", isAuthenticated, async (req, res) => {
   try {
     const subjects = await pool.query("SELECT * FROM subjects WHERE user_id = $1", [req.session.userId])
-    res.render("index", { subjects: subjects.rows })
+    res.render("dashboard", { subjects: subjects.rows })
   } catch (err) {
     console.error("Error fetching subjects:", err)
     res.status(500).render("error", { error: "Error fetching subjects" })
@@ -319,6 +321,11 @@ app.get("/dashboard", (req, res) => {
       res.status(500).json({ error: "Error updating progress" })
     }
   })
+  app.get("/check-session", (req, res) => {
+    console.log("🔍 Checking session:", req.session);
+    res.json(req.session);
+  });
+  
   
   app.get("/get-structure", isAuthenticated, async (req, res) => {
     try {
