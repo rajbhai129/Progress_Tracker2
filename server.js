@@ -6,35 +6,57 @@ const path = require("path");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const PgSession = require("connect-pg-simple")(session);
+const cors = require("cors");
+
+
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Log the DATABASE_URL for debugging (make sure this prints the Render connection string)
+// Log the DATABASE_URL for debugging
 console.log("DATABASE_URL:", process.env.DATABASE_URL);
 
 // Create a PostgreSQL pool using the DATABASE_URL with SSL enabled
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false
-  }
+    rejectUnauthorized: false,
+  },
 });
 
 pool.connect()
-  .then(() => console.log("✅ Connected to PostgreSQL"))
-  .catch(err => console.error("❌ PostgreSQL Connection Error:", err));
+  .then(() => console.log("Connected to PostgreSQL"))
+  .catch(err => console.error("PostgreSQL Connection Error:", err));
 
 // Use connect-pg-simple for session storage, reusing the same pool
 app.use(session({
-  store: new PgSession({
-    pool: pool, // Using the pool that has SSL enabled
-    tableName: 'session' // optional, defaults to 'session'
-  }),
+  store: new PgSession({ pool: pool, tableName: "session" }),
+  name: 'sid',
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: process.env.NODE_ENV === 'production' } // true in production if using HTTPS
+  cookie: {
+    secure: true, // Enable secure cookies for HTTPS
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000, // 1 day
+    sameSite: "none" // Allow cross-origin session sharing
+  }
+}));
+
+
+app.use((req, res, next) => {
+  console.log('Session Debug:', {
+    sessionId: req.sessionID,
+    hasSession: !!req.session,
+    userId: req.session?.userId
+  });
+  next();
+});
+
+
+app.use(cors({
+  origin: "https://progress-tracker-1mb9.onrender.com", // Replace with your frontend URL
+  credentials: true
 }));
 
 app.set("view engine", "ejs");
@@ -45,8 +67,13 @@ app.use(bodyParser.json());
 
 // Middleware to check if user is authenticated
 const isAuthenticated = (req, res, next) => {
-  if (req.session.userId) return next();
-  return res.redirect("/login");
+  console.log('Session check:', req.session);
+  console.log('User ID in session:', req.session.userId);
+  
+  if (req.session && req.session.userId) {
+    return next();
+  }
+  res.redirect("/login");
 };
 
 // Routes
@@ -58,7 +85,7 @@ app.get("/login", (req, res) => {
   res.render("login");
 });
 
-app.post("/login", async (req, res, next) => {
+app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   try {
     const result = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
@@ -66,17 +93,25 @@ app.post("/login", async (req, res, next) => {
       const user = result.rows[0];
       const isMatch = await bcrypt.compare(password, user.password);
       if (isMatch) {
+        // Set session data
         req.session.userId = user.id;
-        return res.redirect("/"); // Return to prevent further execution
-      } else {
-        return res.render("login", { error: "Invalid credentials" });
+        req.session.username = user.username;
+        
+        // Save session and redirect
+        return req.session.save((err) => {
+          if (err) {
+            console.error("Session save error:", err);
+            return res.render("login", { error: "Login error. Please try again." });
+          }
+          // Redirect after successful save
+          res.redirect("/dashboard");
+        });
       }
-    } else {
-      return res.render("login", { error: "Invalid credentials" });
     }
+    res.render("login", { error: "Invalid credentials" });
   } catch (err) {
-    console.error("Error during login:", err);
-    return next(err);
+    console.error("Login error:", err);
+    res.render("login", { error: "An error occurred" });
   }
 });
 
@@ -88,25 +123,21 @@ app.post("/register", async (req, res, next) => {
   const { username, email, password } = req.body;
   try {
     console.log("Registration attempt for:", username, email);
-
     // Check if user already exists
     const userCheck = await pool.query("SELECT * FROM users WHERE username = $1 OR email = $2", [username, email]);
     if (userCheck.rows.length > 0) {
       console.log("User already exists");
       return res.status(400).json({ error: "Username or email already exists" });
     }
-
-    console.log("Hashing password...");
+    console.log("Hashing password…");
     const hashedPassword = await bcrypt.hash(password, 10);
     console.log("Password hashed successfully");
-
-    console.log("Inserting new user into database...");
+    console.log("Inserting new user into database…");
     const result = await pool.query(
       "INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id",
       [username, email, hashedPassword]
     );
     console.log("User inserted successfully, ID:", result.rows[0].id);
-
     req.session.userId = result.rows[0].id;
     return res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
@@ -124,16 +155,28 @@ app.get("/logout", (req, res) => {
   });
 });
 
-app.get("/dashboard", isAuthenticated, async (req, res, next) => {
+app.get("/dashboard", isAuthenticated, async (req, res) => {
   try {
-    const subjects = await pool.query("SELECT * FROM subjects WHERE user_id = $1", [req.session.userId]);
-    return res.render("index", { user: req.session.userId, subjects: subjects.rows });
+    const userResult = await pool.query(
+      "SELECT username, email FROM users WHERE id = $1",
+      [req.session.userId]
+    );
+
+    if (!userResult.rows.length) {
+      req.session.destroy();
+      return res.redirect("/login");
+    }
+
+    res.render("dashboard", {
+      user: userResult.rows[0],
+      userId: req.session.userId,
+      username: userResult.rows[0].username
+    });
   } catch (err) {
-    console.error("Error fetching subjects:", err);
-    return next(err);
+    console.error("Dashboard error:", err);
+    res.render("error", { error: "Error loading dashboard" });
   }
 });
-
 // Additional routes for subjects, chapters, components, etc. should also return after sending a response
 // For brevity, they are left unchanged but ensure you follow the pattern of returning responses or calling next(err).
 /*app.get("/", isAuthenticated, async (req, res) => {
@@ -313,6 +356,7 @@ app.get("/dashboard", isAuthenticated, async (req, res, next) => {
   app.get("/progress", isAuthenticated, (req, res) => {
     res.render("progress")
   })
+
 // Centralized error handling middleware (must come last)
 app.use((err, req, res, next) => {
   console.error("Error handler:", err.stack);

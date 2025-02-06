@@ -1,16 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.getElementById("login-form");
-  const API_URL = 
-    process.env.NEXT_PUBLIC_API_URL || "https://progress-tracker-1mb9.onrender.com"; // Use Render backend URL
-
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-
     const formData = new FormData(loginForm);
     const data = Object.fromEntries(formData);
-
     try {
-      const response = await fetch(`${API_URL}/login`, {  // Use full API URL
+      const response = await fetch("/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -18,7 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
         body: JSON.stringify(data),
         credentials: "include", // Ensures cookies (session) are sent
       });
-
       if (response.ok) {
         window.location.href = "/dashboard";
       } else {
