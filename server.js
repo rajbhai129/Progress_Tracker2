@@ -5,51 +5,48 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const bcrypt = require("bcrypt");
 const session = require("express-session");
-
 const PgSession = require("connect-pg-simple")(session);
+
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Database connection using environment variables
-console.log("DATABASE_URL:", process.env.DATABASE_URL); // Debug log
+// Log the DATABASE_URL for debugging (make sure this prints the Render connection string)
+console.log("DATABASE_URL:", process.env.DATABASE_URL);
 
+// Create a PostgreSQL pool using the DATABASE_URL with SSL enabled
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
 });
+
 pool.connect()
   .then(() => console.log("✅ Connected to PostgreSQL"))
   .catch(err => console.error("❌ PostgreSQL Connection Error:", err));
 
+// Use connect-pg-simple for session storage, reusing the same pool
+app.use(session({
+  store: new PgSession({
+    pool: pool, // Using the pool that has SSL enabled
+    tableName: 'session' // optional, defaults to 'session'
+  }),
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: process.env.NODE_ENV === 'production' } // true in production if using HTTPS
+}));
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views")); // Ensure views directory is set
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(
-  session({
-    store: new PgSession({
-      conString: process.env.DATABASE_URL, // Use your PostgreSQL connection string
-      // You can pass additional options here if needed
-    }),
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: process.env.NODE_ENV === 'production' } // true in production if using HTTPS
-  })
-);
-
 
 // Middleware to check if user is authenticated
 const isAuthenticated = (req, res, next) => {
-  if (req.session.userId) {
-    next();
-  } else {
-    res.redirect("/login");
-  }
+  if (req.session.userId) return next();
+  return res.redirect("/login");
 };
 
 // Routes
@@ -61,7 +58,7 @@ app.get("/login", (req, res) => {
   res.render("login");
 });
 
-app.post("/login", async (req, res) => {
+app.post("/login", async (req, res, next) => {
   const { username, password } = req.body;
   try {
     const result = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
@@ -70,16 +67,16 @@ app.post("/login", async (req, res) => {
       const isMatch = await bcrypt.compare(password, user.password);
       if (isMatch) {
         req.session.userId = user.id;
-        res.redirect("/"); // Redirect back to landing page
+        return res.redirect("/"); // Return to prevent further execution
       } else {
-        res.render("login", { error: "Invalid credentials" });
+        return res.render("login", { error: "Invalid credentials" });
       }
     } else {
-      res.render("login", { error: "Invalid credentials" });
+      return res.render("login", { error: "Invalid credentials" });
     }
   } catch (err) {
     console.error("Error during login:", err);
-    res.status(500).render("error", { error: "Error during login" });
+    return next(err);
   }
 });
 
@@ -87,7 +84,7 @@ app.get("/register", (req, res) => {
   res.render("register");
 });
 
-app.post("/register", async (req, res) => {
+app.post("/register", async (req, res, next) => {
   const { username, email, password } = req.body;
   try {
     console.log("Registration attempt for:", username, email);
@@ -104,18 +101,17 @@ app.post("/register", async (req, res) => {
     console.log("Password hashed successfully");
 
     console.log("Inserting new user into database...");
-    const result = await pool.query("INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id", [
-      username,
-      email,
-      hashedPassword,
-    ]);
+    const result = await pool.query(
+      "INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id",
+      [username, email, hashedPassword]
+    );
     console.log("User inserted successfully, ID:", result.rows[0].id);
 
     req.session.userId = result.rows[0].id;
-    res.status(201).json({ message: "User registered successfully" });
+    return res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
     console.error("Error during registration:", err);
-    res.status(500).json({ error: "Error during registration: " + err.message });
+    return next(err);
   }
 });
 
@@ -128,17 +124,18 @@ app.get("/logout", (req, res) => {
   });
 });
 
-app.get("/dashboard", isAuthenticated, async (req, res) => {
+app.get("/dashboard", isAuthenticated, async (req, res, next) => {
   try {
     const subjects = await pool.query("SELECT * FROM subjects WHERE user_id = $1", [req.session.userId]);
-    res.render("index", { user: req.session.userId, subjects: subjects.rows });
+    return res.render("index", { user: req.session.userId, subjects: subjects.rows });
   } catch (err) {
     console.error("Error fetching subjects:", err);
-    res.status(500).render("error", { error: "Error fetching subjects" });
+    return next(err);
   }
 });
 
-// Other routes for adding/editing subjects, chapters, components, and progress
+// Additional routes for subjects, chapters, components, etc. should also return after sending a response
+// For brevity, they are left unchanged but ensure you follow the pattern of returning responses or calling next(err).
 /*app.get("/", isAuthenticated, async (req, res) => {
   try {
     const subjects = await pool.query("SELECT * FROM subjects WHERE user_id = $1", [req.session.userId])
@@ -316,9 +313,12 @@ app.get("/dashboard", isAuthenticated, async (req, res) => {
   app.get("/progress", isAuthenticated, (req, res) => {
     res.render("progress")
   })
-// Error handling middleware
+// Centralized error handling middleware (must come last)
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error("Error handler:", err.stack);
+  if (res.headersSent) {
+    return next(err);
+  }
   res.status(500).render("error", { error: "Something went wrong!" });
 });
 
