@@ -36,13 +36,13 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === "production",
+    secure: process.env.NODE_ENV === "production", // Ensure cookies work in development
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000, // 1 day
-    sameSite: "none" // Final fix: 'none' for cross-origin persistence
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // Fix cross-origin session issues
   }
+  
 }));
-
 
 
 
@@ -59,9 +59,12 @@ app.use((req, res, next) => {
 
 
 app.use(cors({
-  origin: "https://progress-tracker-1mb9.onrender.com",
-  credentials: true  
+  origin: ["https://progress-tracker-1mb9.onrender.com", "http://localhost:3000"], // Allow frontend and local testing
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
 
 
 app.set("view engine", "ejs");
@@ -100,18 +103,26 @@ app.post("/login", async (req, res) => {
       if (isMatch) {
         req.session.userId = user.id;
         req.session.username = user.username;
-
         console.log("✅ Before saving session:", req.session);
-
-        req.session.save((err) => {
+        req.session.regenerate((err) => {
           if (err) {
-            console.error("❌ Session save error:", err);
-            return res.render("login", { error: "Login error. Please try again." });
+            console.error("❌ Session regenerate error:", err);
+            return res.render("login", { error: "Session error. Please try again." });
           }
-          console.log("✅ Session saved successfully:", req.session);
-          return res.redirect("/dashboard");
+        
+          req.session.userId = user.id;
+          req.session.username = user.username;
+        
+          req.session.save((err) => {
+            if (err) {
+              console.error("❌ Session save error:", err);
+              return res.render("login", { error: "Login error. Please try again." });
+            }
+            console.log("✅ Session saved successfully:", req.session);
+            return res.redirect("/dashboard");
+          });
         });
-
+        
         return; // Prevent duplicate responses
       }
     }
@@ -321,11 +332,6 @@ app.get("/dashboard", (req, res) => {
       res.status(500).json({ error: "Error updating progress" })
     }
   })
-  app.get("/check-session", (req, res) => {
-    console.log("🔍 Checking session:", req.session);
-    res.json(req.session);
-  });
-  
   
   app.get("/get-structure", isAuthenticated, async (req, res) => {
     try {
