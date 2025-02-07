@@ -8,13 +8,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = Object.fromEntries(formData);
     
     try {
-      const response = await fetch(`${window.location.origin}/login`, {  // Auto-detects environment
+      const response = await fetch("/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
-        credentials: "include"  // 🔥 Ensures session cookies are sent
+        credentials: "include" // 🔥 Required for sending cookies!
       });
-
+      
       if (response.ok) {
         console.log("✅ Login successful, redirecting...");
         window.location.href = "/dashboard";

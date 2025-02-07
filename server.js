@@ -29,20 +29,27 @@ pool.connect()
   .catch(err => console.error("PostgreSQL Connection Error:", err));
 
 // Use connect-pg-simple for session storage, reusing the same pool
+app.use(cors({
+  origin: "https://progress-tracker-1mb9.onrender.com", // Allow frontend
+  credentials: true,  
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
 app.use(session({
   store: new PgSession({ pool: pool, tableName: "session" }),
-  name: "sid",
+  name: "sid", // Session cookie name
   secret: process.env.SESSION_SECRET || "your-secret-key",
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === "production", // Ensure cookies work in development
-    httpOnly: true,
+    secure: true, // Required for HTTPS
+    httpOnly: true, // Prevents JavaScript access
     maxAge: 24 * 60 * 60 * 1000, // 1 day
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax" // Fix cross-origin session issues
+    sameSite: "None" // Required for cross-site requests
   }
-  
 }));
+
 
 
 
@@ -58,12 +65,7 @@ app.use((req, res, next) => {
 
 
 
-app.use(cors({
-  origin: ["https://progress-tracker-1mb9.onrender.com", "http://localhost:3000"], // Allow frontend and local testing
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
+
 
 
 
