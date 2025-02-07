@@ -12,16 +12,14 @@ const cors = require("cors");
 
 const app = express();
 const port = process.env.PORT || 3000;
-
+app.set("trust proxy", 1);
 // Log the DATABASE_URL for debugging
 console.log("DATABASE_URL:", process.env.DATABASE_URL);
 
 // Create a PostgreSQL pool using the DATABASE_URL with SSL enabled
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  ssl: { rejectUnauthorized: false }
 });
 
 pool.connect()
@@ -30,7 +28,7 @@ pool.connect()
 
 // Use connect-pg-simple for session storage, reusing the same pool
 app.use(cors({
-  origin: "https://progress-tracker-1mb9.onrender.com", // Allow frontend
+  origin: "https://progress-tracker-1mb9.onrender.com", // Change to your frontend domain
   credentials: true,  
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"]
@@ -38,18 +36,17 @@ app.use(cors({
 
 app.use(session({
   store: new PgSession({ pool: pool, tableName: "session" }),
-  name: "sid", // Session cookie name
+  name: "sid",
   secret: process.env.SESSION_SECRET || "your-secret-key",
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: true, // Required for HTTPS
+    secure: true, // Required for HTTPS (Render forces HTTPS)
     httpOnly: true, // Prevents JavaScript access
     maxAge: 24 * 60 * 60 * 1000, // 1 day
-    sameSite: "None" // Required for cross-site requests
+    sameSite: "None" // Required for cross-origin cookies
   }
 }));
-
 
 
 
