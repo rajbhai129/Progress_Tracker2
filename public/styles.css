@@ -80,22 +80,66 @@ nav a:hover {
   align-items: center;
 }
 
-/* 🌟 Improved Progress Bar */
+/* 🌟 Progress Page Styling */
+.progress-page {
+  max-width: 900px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.progress-page h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: var(--primary-color);
+}
+
+/* 🌟 Progress Section */
+.progress-section {
+  margin-bottom: 30px;
+  padding: 15px;
+  background: var(--bg-light);
+  border-radius: var(--border-radius);
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.progress-section h2 {
+  font-size: 18px;
+  color: var(--text-dark);
+  margin-bottom: 10px;
+}
+
+/* 🌟 Progress Bar Wrapper */
 .progress-container {
   width: 100%;
   background: #ecf0f1;
   border-radius: 12px;
-  padding: 5px;
+  padding: 3px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  position: relative;
 }
 
-.progress-bar {
+/* 🌟 Actual Progress Bar */
+.progress {
   height: 15px;  /* 🔥 Thicker progress bar */
-  width: 0%;
-  background: linear-gradient(135deg, var(--secondary-color), var(--primary-hover));
+  width: 0%;  /* Default: No progress */
+  background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
   border-radius: 10px;
   transition: width 0.5s ease-in-out;
 }
+
+/* 🌟 Percentage Label */
+.progress-label {
+  margin-top: 5px;
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--text-dark);
+}
+
 
 /* Accordion */
 .subject-content, .chapter-content {
