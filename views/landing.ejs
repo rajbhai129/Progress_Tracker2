@@ -54,56 +54,71 @@
     }
 
     .menu-toggle {
-      display: none;
+      display: block;
+      cursor: pointer;
       background: none;
       border: none;
-      color: white;
       font-size: 24px;
-      cursor: pointer;
-      padding: 5px;
+      padding: 10px;
+      color: white;
     }
-
+  
     .nav-links {
-      display: flex;
-      list-style: none;
-      gap: 15px;
-      align-items: center;
-    }
-
-    .nav-links a.btn {
-      display: inline-block;
-      padding: 8px 20px;
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      right: 0;
       background: white;
-      color: #2575fc;
-      border-radius: 25px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
-
-    .nav-links a.btn:hover {
-      background: #f0f0f0;
-      transform: translateY(-2px);
-    }
-
-    /* Hero Section */
-    .hero {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 15px;
       text-align: center;
-      padding: 60px 20px;
+      z-index: 1000;
+      transition: all 0.3s ease-in-out;
     }
-
-    .hero-content h1 {
-      font-size: 2.8rem;
-      margin-bottom: 20px;
+  
+    .nav-links.active {
+      display: flex;
     }
-
-    .hero-content p {
-      font-size: 1.2rem;
-      margin-bottom: 30px;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
+  
+    .nav-links a.btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: #2575fc;
+      color: white !important;
+      font-weight: bold;
+      border-radius: 25px;
+      margin-bottom: 10px;
+      transition: background 0.3s ease;
     }
+  
+    .nav-links a.btn:hover {
+      background: #1a5bb8;
+    }
+  
+  
+  /* 🌟 Restore Hero Section Background */
+  .hero {
+    text-align: center;
+    padding: 100px 20px;
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    color: white;
+  }
+  
+  .hero-content h1 {
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+  }
+  
+  .hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
     #get-start-btn {
       padding: 15px 30px;
@@ -249,49 +264,46 @@
       transition: opacity 0.5s ease-out;
     }
     
-    /* Hide preloader smoothly */
     #preloader.hidden {
       opacity: 0;
       pointer-events: none;
     }
     
 
-.spinner {
-  width: 60px;
-  height: 60px;
-  border: 5px solid #6a11cb;
-  border-top: 5px solid transparent;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* 🌟 Smooth Fade-in Effect */
-.fade-in {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 1s ease-out, transform 1s ease-out;
-  will-change: opacity, transform;
-  pointer-events: none; /* Prevents interaction issues */
-}
-
-/* When element becomes visible */
-.fade-in.show {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 5px solid #6a11cb;
+      border-top: 5px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* 🌟 Smooth Fade-in Effect */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease-out, transform 1s ease-out;
+    }
+    
+    .fade-in.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
 
 
     /* Mobile Responsive Styles */
     @media (max-width: 768px) {
       .menu-toggle {
-        display: block;
+        display: block; /* Ensure the button is visible */
+        cursor: pointer;
       }
 
       .nav-links {
@@ -300,13 +312,14 @@
         top: 100%;
         left: 0;
         right: 0;
-        background: #2575fc;
+        background: #ffffff; /* ✅ Change background to white */
         padding: 20px;
         flex-direction: column;
         width: 100%;
         z-index: 1000;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
+    
 
       .nav-links.active {
         display: flex;
@@ -322,8 +335,17 @@
         width: 100%;
         text-align: center;
         padding: 12px 20px;
+        background: #2575fc; /* ✅ Make button background blue */
+        color: white !important; /* ✅ Ensure text color is visible */
+        font-weight: bold;
+        border-radius: 25px;
+        margin-bottom: 10px;
+        transition: background 0.3s ease;
       }
 
+.nav-links a.btn:hover {
+    background: #1a5bb8;
+  }
       .hero-content h1 {
         font-size: 2rem;
       }
@@ -346,14 +368,14 @@
 
 
     .features-wrapper, 
-    .about, 
-    .features-wrapper h2, 
-    .features-wrapper p, 
-    .about h2, 
-    .about p {
-      color: #333 !important; /* Force text color */
-      transition: color 0.3s ease-in-out;
-    }
+.about, 
+.features-wrapper h2, 
+.features-wrapper p, 
+.about h2, 
+.about p {
+  color: #333 !important;
+  transition: color 0.3s ease-in-out;
+}
     
 
 
@@ -373,7 +395,7 @@
           <h2>Progress Tracker</h2>
         </div>
         <button class="menu-toggle" id="mobile-menu">
-          <i class="fas fa-bars"></i>
+          <i class="fas fa-bars"></i> <!-- ✅ Hamburger icon -->
         </button>
         <ul class="nav-links" id="nav-links">
           <li><a href="#about" class="btn">About</a></li>
@@ -385,10 +407,10 @@
             <li><a href="/register" class="btn">Register</a></li>
           <% } %>
         </ul>
-        
       </div>
     </nav>
-
+  </header>
+  
     <!-- Hero Section -->
    <!-- Hero Section with Animation -->
 <div class="hero fade-in">
@@ -445,44 +467,70 @@
   </footer>
 
   <script>
-    // Mobile menu toggle
-    const mobileMenu = document.getElementById('mobile-menu');
-    const navLinks = document.getElementById('nav-links');
+    document.addEventListener("DOMContentLoaded", function () {
+      const mobileMenu = document.getElementById("mobile-menu");
+      const navLinks = document.getElementById("nav-links");
     
-    mobileMenu.addEventListener('click', function(e) {
-      e.stopPropagation();
-      navLinks.classList.toggle('active');
-    });
+      // Ensure menu is hidden initially
+      navLinks.style.display = "none";
     
-    // Close menu when clicking outside
-    document.addEventListener('click', function(e) {
-      if (!navLinks.contains(e.target) && !mobileMenu.contains(e.target)) {
-        navLinks.classList.remove('active');
-      }
-    });
-
-    // Close menu when clicking a link
-    document.querySelectorAll('.nav-links a').forEach(link => {
-      link.addEventListener('click', function() {
-        navLinks.classList.remove('active');
+      // Toggle menu on click
+      mobileMenu.addEventListener("click", function () {
+        navLinks.classList.toggle("active");
+        navLinks.style.display = navLinks.classList.contains("active") ? "flex" : "none";
       });
-    });
-
-    // Remove Preloader when Page Loads
-    window.addEventListener("load", () => {
-      const preloader = document.getElementById("preloader");
-      preloader.classList.add("hidden"); // Apply transition
-      setTimeout(() => {
-        preloader.style.display = "none";
-      }, 500); // Wait for transition to complete
     
-      // Show animated sections
-      document.querySelectorAll(".fade-in").forEach((el, index) => {
+      // Close menu when clicking outside
+      document.addEventListener("click", function (event) {
+        if (!mobileMenu.contains(event.target) && !navLinks.contains(event.target)) {
+          navLinks.classList.remove("active");
+          navLinks.style.display = "none";
+        }
+      });
+    
+      // Close menu when clicking a link
+      document.querySelectorAll(".nav-links a").forEach((link) => {
+        link.addEventListener("click", function () {
+          navLinks.classList.remove("active");
+          navLinks.style.display = "none";
+        });
+      });
+    
+      // Remove Preloader when Page Loads
+      window.addEventListener("load", () => {
+        const preloader = document.getElementById("preloader");
+        preloader.classList.add("hidden");
         setTimeout(() => {
-          el.classList.add("show");
-        }, index * 300);
+          preloader.style.display = "none";
+        }, 500);
+    
+        // Show animated sections
+        document.querySelectorAll(".fade-in").forEach((el, index) => {
+          setTimeout(() => {
+            el.classList.add("show");
+          }, index * 300);
+        });
+      });
+    
+      // Scroll animations
+      const fadeElements = document.querySelectorAll(".fade-in");
+      const observer = new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("show");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.2 }
+      );
+    
+      fadeElements.forEach((el) => {
+        observer.observe(el);
       });
     });
+    
     
   </script>
 </body>
