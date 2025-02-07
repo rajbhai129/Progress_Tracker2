@@ -4,13 +4,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function fetchProgressData() {
   try {
-    const response = await fetch("/get-structure")
-    const data = await response.json()
-    updateProgress(data.subjects)
+    const response = await fetch("/get-structure");
+    const data = await response.json();
+    
+    const subjectsProgressContainer = document.getElementById("subjects-progress");
+    subjectsProgressContainer.innerHTML = "";
+
+    data.subjects.forEach((subject, index) => {
+      setTimeout(() => {
+        const subjectElement = createProgressElement(subject, calculateSubjectProgress(subject));
+        subjectsProgressContainer.appendChild(subjectElement);
+      }, index * 100); // Delayed appearance for smooth effect
+    });
+
+    updateOverallProgress(0); // Reset progress
   } catch (error) {
-    console.error("Error fetching progress data:", error)
+    console.error("Error fetching progress data:", error);
   }
 }
+
 
 function updateProgress(subjects) {
   const subjectsProgressContainer = document.getElementById("subjects-progress")
@@ -59,18 +71,34 @@ function calculateChapterProgress(chapter) {
   return chapterWeightage > 0 ? chapterProgress / chapterWeightage : 0
 }
 
-function createProgressElement(subject, subjectProgress) {
-  const subjectElement = document.createElement("div")
-  subjectElement.classList.add("progress-item", "subject")
-  const progressPercentage = (subjectProgress * 100).toFixed(2)
+function generateAvatarColor(name) {
+  const colors = [
+    "#ffadad", "#ffda77", "#a0c4ff", "#bdb2ff", "#ffc6ff",
+    "#9bf6ff", "#ff9b85", "#caffbf", "#fdb44b", "#6a85b6"
+  ];
+  let hash = 0;
+  
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  
+  return colors[Math.abs(hash) % colors.length];
+}
 
-  const avatar = document.createElement("div")
-  avatar.className = "avatar"
-  avatar.textContent = subject.name[0].toUpperCase()
+
+function createProgressElement(subject, subjectProgress) {
+  const subjectElement = document.createElement("div");
+  subjectElement.classList.add("progress-item", "subject");
+  const progressPercentage = (subjectProgress * 100).toFixed(2);
+
+  // Generate a random color for the avatar
+  const avatarColor = generateAvatarColor(subject.name);
 
   subjectElement.innerHTML = `
       <div class="subject-header">
-          ${avatar.outerHTML}
+          <div class="avatar" style="background-color: ${avatarColor};">
+              ${subject.name[0].toUpperCase()}
+          </div>
           <h3>${subject.name} (${subject.weightage}%)</h3>
           <div>
               <span>${progressPercentage}% completed</span>
@@ -83,25 +111,25 @@ function createProgressElement(subject, subjectProgress) {
           </div>
           <div class="chapters-container"></div>
       </div>
-  `
+  `;
 
-  const subjectHeader = subjectElement.querySelector(".subject-header")
-  const subjectContent = subjectElement.querySelector(".subject-content")
-  const accordionIcon = subjectElement.querySelector(".accordion-icon")
+  const subjectHeader = subjectElement.querySelector(".subject-header");
+  const subjectContent = subjectElement.querySelector(".subject-content");
+  const accordionIcon = subjectElement.querySelector(".accordion-icon");
 
   subjectHeader.addEventListener("click", () => {
-    subjectContent.classList.toggle("active")
-    accordionIcon.classList.toggle("active")
-  })
+    subjectContent.classList.toggle("active");
+    accordionIcon.classList.toggle("active");
+  });
 
-  const chaptersContainer = subjectElement.querySelector(".chapters-container")
+  const chaptersContainer = subjectElement.querySelector(".chapters-container");
   subject.chapters.forEach((chapter) => {
-    const chapterProgress = calculateChapterProgress(chapter)
-    const chapterElement = createChapterElement(chapter, chapterProgress)
-    chaptersContainer.appendChild(chapterElement)
-  })
+    const chapterProgress = calculateChapterProgress(chapter);
+    const chapterElement = createChapterElement(chapter, chapterProgress);
+    chaptersContainer.appendChild(chapterElement);
+  });
 
-  return subjectElement
+  return subjectElement;
 }
 
 function createChapterElement(chapter, chapterProgress) {

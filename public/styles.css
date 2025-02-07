@@ -80,6 +80,23 @@ nav a:hover {
   align-items: center;
 }
 
+/* 🌟 Subject Avatar Styling */
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+  margin-right: 10px;
+}
+
+
+
 /* 🌟 Progress Page Styling */
 .progress-page {
   max-width: 900px;
@@ -225,6 +242,34 @@ button:hover {
   height: 18px;
   cursor: pointer;
 }
+
+/* 🌟 Smooth Fade-in Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Apply Animation to Subjects, Chapters, and Components */
+.subject, .chapter, .component, .progress-item {
+  opacity: 0;
+  animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+/* Delay animations for a staggered effect */
+.subject:nth-child(1) { animation-delay: 0.1s; }
+.subject:nth-child(2) { animation-delay: 0.2s; }
+.subject:nth-child(3) { animation-delay: 0.3s; }
+.chapter:nth-child(1) { animation-delay: 0.1s; }
+.chapter:nth-child(2) { animation-delay: 0.2s; }
+.component:nth-child(1) { animation-delay: 0.1s; }
+.component:nth-child(2) { animation-delay: 0.2s; }
+
 
 /* 🌟 Responsive Design */
 @media (max-width: 768px) {

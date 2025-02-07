@@ -121,6 +121,24 @@
       transform: scale(1.05);
     }
 
+     /* 🌟 Dashboard Button (After Login) */
+    #dashboard-btn {
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      background: #e325fc; /* Blue Theme */
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #dashboard-btn:hover {
+      background: #911ab8;
+      transform: scale(1.05);
+    }
+
+
     /* Features Section */
     .features-wrapper {
       background: white;
@@ -218,6 +236,57 @@
     .social-links a:hover {
       color: #ff7f50;
     }
+    /* 🌟 Preloader Styling */
+    #preloader {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      transition: opacity 0.5s ease-out;
+    }
+    
+    /* Hide preloader smoothly */
+    #preloader.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 5px solid #6a11cb;
+  border-top: 5px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 🌟 Smooth Fade-in Effect */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+  will-change: opacity, transform;
+  pointer-events: none; /* Prevents interaction issues */
+}
+
+/* When element becomes visible */
+.fade-in.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+
 
     /* Mobile Responsive Styles */
     @media (max-width: 768px) {
@@ -264,18 +333,38 @@
         padding: 0 15px;
       }
 
-      .features-wrapper h2,
-      .about h2 {
-        font-size: 2rem;
-      }
+      .features-wrapper, 
+.about {
+  color: #333 !important; /* Ensure text color remains visible */
+}
+
 
       .feature {
         margin: 0 15px;
       }
     }
+
+
+    .features-wrapper, 
+    .about, 
+    .features-wrapper h2, 
+    .features-wrapper p, 
+    .about h2, 
+    .about p {
+      color: #333 !important; /* Force text color */
+      transition: color 0.3s ease-in-out;
+    }
+    
+
+
   </style>
 </head>
 <body>
+  <!-- 🌟 Preloader Animation -->
+<div id="preloader">
+  <div class="spinner"></div>
+</div>
+
   <!-- Header & Navigation -->
   <header class="landing-header">
     <nav class="navbar">
@@ -301,43 +390,49 @@
     </nav>
 
     <!-- Hero Section -->
-    <div class="hero">
-      <div class="hero-content">
-        <h1>Empower Your Learning Journey</h1>
-        <p>Track your progress, stay motivated, and achieve your goals with our intuitive progress tracker.</p>
-        <button id="get-start-btn" onclick="window.location.href='/register'">Get Started</button>
-      </div>
-    </div>
-  </header>
+   <!-- Hero Section with Animation -->
+<div class="hero fade-in">
+  <div class="hero-content">
+    <h1>Empower Your Learning Journey</h1>
+    <p>Track your progress, stay motivated, and achieve your goals with our intuitive progress tracker.</p>
+    
+    <% if (user) { %>
+      <button id="dashboard-btn" onclick="window.location.href='/dashboard'">Go to Dashboard</button>
+    <% } else { %>
+      <button id="get-start-btn" onclick="window.location.href='/register'">Get Started</button>
+    <% } %>
+  </div>
+</div>
 
-  <!-- Features Section -->
-  <section class="features-wrapper">
-    <h2>Our Key Features</h2>
-    <div class="feature-container">
-      <div class="feature">
-        <i class="fa-solid fa-chart-line"></i>
-        <h3>Real-Time Analytics</h3>
-        <p>Visualize your learning progress with interactive charts and statistics that help you make data-driven decisions.</p>
-      </div>
-      <div class="feature">
-        <i class="fa-solid fa-lightbulb"></i>
-        <h3>Smart Insights</h3>
-        <p>Receive personalized recommendations and insights that keep you on track to reach your learning milestones.</p>
-      </div>
-      <div class="feature">
-        <i class="fa-solid fa-user-check"></i>
-        <h3>Easy Onboarding</h3>
-        <p>Sign up quickly and start tracking your progress with an intuitive dashboard designed for all learners.</p>
-      </div>
+<!-- Features Section -->
+<section class="features-wrapper fade-in">
+  <h2>Our Key Features</h2>
+  <div class="feature-container">
+    <div class="feature">
+      <i class="fa-solid fa-chart-line"></i>
+      <h3>Real-Time Analytics</h3>
+      <p>Visualize your learning progress with interactive charts and statistics.</p>
     </div>
-  </section>
+    <div class="feature">
+      <i class="fa-solid fa-lightbulb"></i>
+      <h3>Smart Insights</h3>
+      <p>Receive personalized recommendations to keep you on track.</p>
+    </div>
+    <div class="feature">
+      <i class="fa-solid fa-user-check"></i>
+      <h3>Easy Onboarding</h3>
+      <p>Sign up quickly and start tracking with an intuitive dashboard.</p>
+    </div>
+  </div>
+</section>
 
-  <!-- About Section -->
-  <section class="about" id="about">
-    <h2>About Us</h2>
-    <p>At Progress Tracker, we believe that understanding your progress is the key to success. Our platform is designed with educators, students, and lifelong learners in mind—empowering you to achieve more every day.</p>
-    <button onclick="window.location.href='/register'">Join Us Today</button>
-  </section>
+<!-- About Section -->
+<section class="about fade-in">
+  <h2>About Us</h2>
+  <p>At Progress Tracker, we believe that tracking progress is key to success.</p>
+  <button onclick="window.location.href='/register'">Join Us Today</button>
+</section>
+
 
   <!-- Footer -->
   <footer class="footer">
@@ -372,6 +467,23 @@
         navLinks.classList.remove('active');
       });
     });
+
+    // Remove Preloader when Page Loads
+    window.addEventListener("load", () => {
+      const preloader = document.getElementById("preloader");
+      preloader.classList.add("hidden"); // Apply transition
+      setTimeout(() => {
+        preloader.style.display = "none";
+      }, 500); // Wait for transition to complete
+    
+      // Show animated sections
+      document.querySelectorAll(".fade-in").forEach((el, index) => {
+        setTimeout(() => {
+          el.classList.add("show");
+        }, index * 300);
+      });
+    });
+    
   </script>
 </body>
 </html>

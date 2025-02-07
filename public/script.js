@@ -19,30 +19,55 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function fetchChaptersAndComponents() {
   try {
-    const response = await fetch("/get-structure")
-    const data = await response.json()
+    const response = await fetch("/get-structure");
+    const data = await response.json();
 
-    const subjectsContainer = document.getElementById("subjects")
-    subjectsContainer.innerHTML = ""
+    const subjectsContainer = document.getElementById("subjects");
+    subjectsContainer.innerHTML = "";
 
-    data.subjects.forEach((subject) => {
-      const subjectElement = createSubjectElement(subject)
-      subjectsContainer.appendChild(subjectElement)
-    })
+    data.subjects.forEach((subject, index) => {
+      setTimeout(() => {
+        const subjectElement = createSubjectElement(subject);
+        subjectsContainer.appendChild(subjectElement);
+      }, index * 100); // Staggered delay for better effect
+    });
 
-    updateProgress()
+    updateProgress();
   } catch (error) {
-    console.error("Error fetching structure:", error)
+    console.error("Error fetching structure:", error);
   }
 }
 
+
+function generateAvatarColor(name) {
+  const colors = [
+    "#ffadad", "#ffda77", "#a0c4ff", "#bdb2ff", "#ffc6ff",
+    "#9bf6ff", "#ff9b85", "#caffbf", "#fdb44b", "#6a85b6"
+  ];
+  let hash = 0;
+  
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  
+  return colors[Math.abs(hash) % colors.length];
+}
+
+
+
 function createSubjectElement(subject) {
-  const subjectElement = document.createElement("div")
-  subjectElement.classList.add("subject")
-  subjectElement.dataset.id = subject.id
+  const subjectElement = document.createElement("div");
+  subjectElement.classList.add("subject");
+  subjectElement.dataset.id = subject.id;
+
+  // Generate a random color for the avatar
+  const avatarColor = generateAvatarColor(subject.name);
 
   subjectElement.innerHTML = `
     <div class="subject-header">
+      <div class="avatar" style="background-color: ${avatarColor};">
+        ${subject.name[0].toUpperCase()}
+      </div>
       <h3>${subject.name} (${subject.weightage}%)</h3>
       <div>
         <button class="edit-subject">Edit</button>
@@ -62,53 +87,43 @@ function createSubjectElement(subject) {
       </form>
       <div class="chapters"></div>
     </div>
-  `
+  `;
 
-  const avatar = document.createElement("div")
-  avatar.className = "avatar"
-  avatar.textContent = subject.name[0].toUpperCase()
-
-  subjectElement.querySelector(".subject-header").innerHTML = `
-    ${avatar.outerHTML}
-    <h3>${subject.name} (${subject.weightage}%)</h3>
-    <div>
-      <button class="edit-subject">Edit</button>
-      <button class="delete-subject">Delete</button>
-      <i class="fas fa-chevron-down accordion-icon"></i>
-    </div>
-  `
-
-  const subjectHeader = subjectElement.querySelector(".subject-header")
-  const subjectContent = subjectElement.querySelector(".subject-content")
-  const accordionIcon = subjectElement.querySelector(".accordion-icon")
+  // Event Listeners for subject interactions
+  const subjectHeader = subjectElement.querySelector(".subject-header");
+  const subjectContent = subjectElement.querySelector(".subject-content");
+  const accordionIcon = subjectElement.querySelector(".accordion-icon");
 
   if (isAccordionOpen(`subject-${subject.id}`)) {
-    subjectContent.classList.add("active")
-    accordionIcon.classList.add("active")
+    subjectContent.classList.add("active");
+    accordionIcon.classList.add("active");
   }
 
   subjectHeader.addEventListener("click", () => {
-    toggleAccordion(subjectHeader, `subject-${subject.id}`)
-  })
+    toggleAccordion(subjectHeader, `subject-${subject.id}`);
+  });
 
   subjectElement.querySelector(".edit-subject").addEventListener("click", (e) => {
-    e.stopPropagation()
-    editSubject(subject)
-  })
+    e.stopPropagation();
+    editSubject(subject);
+  });
+  
   subjectElement.querySelector(".delete-subject").addEventListener("click", (e) => {
-    e.stopPropagation()
-    deleteSubject(subject.id)
-  })
-  subjectElement.querySelector(".add-chapter").addEventListener("submit", addChapter)
+    e.stopPropagation();
+    deleteSubject(subject.id);
+  });
+  
+  subjectElement.querySelector(".add-chapter").addEventListener("submit", addChapter);
 
-  const chaptersContainer = subjectElement.querySelector(".chapters")
+  const chaptersContainer = subjectElement.querySelector(".chapters");
   subject.chapters.forEach((chapter) => {
-    const chapterElement = createChapterElement(chapter)
-    chaptersContainer.appendChild(chapterElement)
-  })
+    const chapterElement = createChapterElement(chapter);
+    chaptersContainer.appendChild(chapterElement);
+  });
 
-  return subjectElement
+  return subjectElement;
 }
+
 
 function createChapterElement(chapter) {
   const chapterElement = document.createElement("div")
