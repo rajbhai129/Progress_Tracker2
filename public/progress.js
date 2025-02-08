@@ -107,12 +107,13 @@ function createProgressElement(subject, subjectProgress) {
       </div>
       <div class="subject-content">
           <div class="progress-bar">
-              <div class="progress" style="width: ${progressPercentage}%"></div>
+              <div class="progress" style="width: ${progressPercentage}%" data-progress="${progressPercentage}%"></div>
           </div>
           <div class="chapters-container"></div>
       </div>
   `;
 
+  // Add event listeners for accordion functionality
   const subjectHeader = subjectElement.querySelector(".subject-header");
   const subjectContent = subjectElement.querySelector(".subject-content");
   const accordionIcon = subjectElement.querySelector(".accordion-icon");
@@ -122,6 +123,7 @@ function createProgressElement(subject, subjectProgress) {
     accordionIcon.classList.toggle("active");
   });
 
+  // Render chapters inside the subject
   const chaptersContainer = subjectElement.querySelector(".chapters-container");
   subject.chapters.forEach((chapter) => {
     const chapterProgress = calculateChapterProgress(chapter);
@@ -133,9 +135,9 @@ function createProgressElement(subject, subjectProgress) {
 }
 
 function createChapterElement(chapter, chapterProgress) {
-  const chapterElement = document.createElement("div")
-  chapterElement.classList.add("progress-item", "chapter-item")
-  const progressPercentage = (chapterProgress * 100).toFixed(2)
+  const chapterElement = document.createElement("div");
+  chapterElement.classList.add("progress-item", "chapter-item");
+  const progressPercentage = (chapterProgress * 100).toFixed(2);
 
   chapterElement.innerHTML = `
       <div class="chapter-header">
@@ -147,32 +149,34 @@ function createChapterElement(chapter, chapterProgress) {
       </div>
       <div class="chapter-content">
           <div class="progress-bar">
-              <div class="progress" style="width: ${progressPercentage}%"></div>
+              <div class="progress" style="width: ${progressPercentage}%" data-progress="${progressPercentage}%"></div>
           </div>
           <ul class="components-list"></ul>
       </div>
-  `
+  `;
 
-  const chapterHeader = chapterElement.querySelector(".chapter-header")
-  const chapterContent = chapterElement.querySelector(".chapter-content")
-  const accordionIcon = chapterElement.querySelector(".accordion-icon")
+  // Add event listeners for accordion functionality
+  const chapterHeader = chapterElement.querySelector(".chapter-header");
+  const chapterContent = chapterElement.querySelector(".chapter-content");
+  const accordionIcon = chapterElement.querySelector(".accordion-icon");
 
   chapterHeader.addEventListener("click", () => {
-    chapterContent.classList.toggle("active")
-    accordionIcon.classList.toggle("active")
-  })
+    chapterContent.classList.toggle("active");
+    accordionIcon.classList.toggle("active");
+  });
 
-  const componentsList = chapterElement.querySelector(".components-list")
+  // Render components inside the chapter
+  const componentsList = chapterElement.querySelector(".components-list");
   chapter.components.forEach((component) => {
-    const componentItem = document.createElement("li")
+    const componentItem = document.createElement("li");
     componentItem.innerHTML = `
           <input type="checkbox" ${component.completed ? "checked" : ""} disabled>
           ${component.name} (${component.weightage}%)
-      `
-    componentsList.appendChild(componentItem)
-  })
+      `;
+    componentsList.appendChild(componentItem);
+  });
 
-  return chapterElement
+  return chapterElement;
 }
 
 function updateOverallProgress(progress) {

@@ -97,6 +97,8 @@ nav a:hover {
 
 
 
+
+
 /* 🌟 Progress Page Styling */
 .progress-page {
   max-width: 900px;
@@ -149,6 +151,49 @@ nav a:hover {
   transition: width 0.5s ease-in-out;
 }
 
+.progress-bar {
+  width: 100%;
+  background-color: #ecf0f1; /* Light gray background */
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  margin: 10px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar .progress {
+  height: 20px; /* Thicker progress bar */
+  width: 0; /* Initial width, updated dynamically */
+  background: linear-gradient(90deg, #2ecc71, #3498db); /* Gradient from green to blue */
+  border-radius: 12px;
+  transition: width 0.5s ease-in-out; /* Smooth animation */
+  position: relative;
+}
+
+
+.progress-bar .progress {
+  height: 20px; /* Thicker progress bar */
+  width: 0; /* Initial width, updated dynamically */
+  background: linear-gradient(90deg, #2ecc71, #3498db); /* Gradient from green to blue */
+  border-radius: 12px;
+  transition: width 0.5s ease-in-out; /* Smooth animation */
+  position: relative;
+}
+
+.progress-item {
+  background-color: white;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.progress-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+
 /* 🌟 Percentage Label */
 .progress-label {
   margin-top: 5px;
@@ -167,6 +212,68 @@ nav a:hover {
 .subject-content.active, .chapter-content.active {
   display: block;
 }
+
+.subject-header, .chapter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #f8f9fa; /* Light background for headers */
+}
+
+.subject-header h3, .chapter-header h4 {
+  margin: 0;
+  font-size: 16px;
+  color: #2c3e50; /* Dark text color */
+}
+
+.subject-header span, .chapter-header span {
+  font-size: 14px;
+  color: #3498db; /* Blue text for progress percentage */
+  font-weight: bold;
+}
+
+
+
+/* 🌟 Accordion Icons */
+.accordion-icon {
+  font-size: 14px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.accordion-icon.active {
+  transform: rotate(180deg);
+}
+
+/* 🌟 Components List */
+.components-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0 0;
+}
+
+.components-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.components-list li:last-child {
+  border-bottom: none;
+}
+
+.components-list input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+
+
 
 /* 🌟 Modern Input Fields */
 input[type="text"], input[type="number"], select {
