@@ -25,6 +25,7 @@
       font-family: Arial, sans-serif;
       line-height: 1.6;
       color: #333;
+      padding-top: 70px;
      
     }
 
@@ -36,67 +37,90 @@
       position: relative;
     }
 
-    .navbar {
-      padding: 15px 20px;
-    }
+    /* Update these navbar styles */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
 
-    .nav-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-    .logo h2 {
-      font-size: 24px;
-      margin: 0;
-    }
+/* Logo styles */
+.logo h2 {
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
-    .menu-toggle {
-      display: block;
-      cursor: pointer;
-      background: none;
-      border: none;
-      font-size: 24px;
-      padding: 10px;
-      color: white;
-    }
+.menu-toggle {
+  display: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  padding: 10px;
+  transition: all 0.3s ease;
+}
   
+
+.menu-toggle:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 10px rgba(106, 17, 203, 0.3);
+}
     .nav-links {
-      display: none;
-      flex-direction: column;
-      position: absolute;
-      top: 60px;
-      left: 0;
-      right: 0;
-      background: white;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      padding: 15px;
-      text-align: center;
-      z-index: 1000;
-      transition: all 0.3s ease-in-out;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      list-style: none;
     }
+
   
     .nav-links.active {
       display: flex;
     }
-  
-    .nav-links a.btn {
-      display: block;
-      width: 100%;
-      padding: 12px;
-      background: #2575fc;
-      color: white !important;
-      font-weight: bold;
+
+    .nav-links a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 600;
+      padding: 8px 16px;
       border-radius: 25px;
-      margin-bottom: 10px;
-      transition: background 0.3s ease;
+      transition: all 0.3s ease;
     }
-  
+    
+    .nav-links a:hover {
+      color: #6a11cb;
+      background: rgba(106, 17, 203, 0.1);
+    }
+    
+    .nav-links a.btn {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white !important;
+      padding: 10px 20px;
+    }
+    
     .nav-links a.btn:hover {
-      background: #1a5bb8;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
     }
+    
   
   
   /* 🌟 Restore Hero Section Background */
@@ -299,11 +323,75 @@
 
 
 
+    @media (min-width: 769px) {
+      .menu-toggle {
+        display: none;
+      }
+      
+      .nav-links {
+        display: flex;
+        gap: 15px;
+        list-style: none;
+      }
+    
+      .nav-links li {
+        margin: 0;
+      }
+    
+      .nav-links a {
+        text-decoration: none;
+        padding: 8px 20px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+    
+      /* Regular nav buttons */
+      .nav-links a:not(.btn) {
+        background: rgba(106, 17, 203, 0.1);
+        color: #333;
+      }
+    
+      .nav-links a:not(.btn):hover {
+        background: rgba(106, 17, 203, 0.2);
+        transform: translateY(-2px);
+      }
+    
+      /* Special buttons (Login/Register) */
+      .nav-links a.btn {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white !important;
+        box-shadow: 0 2px 10px rgba(106, 17, 203, 0.2);
+      }
+    
+      .nav-links a.btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
+      }
+    }
+    
+
+    body {
+      padding-top: 70px;
+    }
+
+
     /* Mobile Responsive Styles */
     @media (max-width: 768px) {
       .menu-toggle {
-        display: block; /* Ensure the button is visible */
+        display: block;
         cursor: pointer;
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        border: none;
+        border-radius: 8px;
+        color: white;
+        padding: 10px;
+        transition: all 0.3s ease;
+      }
+
+      .menu-toggle:hover {
+        transform: scale(1.05);
+        box-shadow: 0 2px 10px rgba(106, 17, 203, 0.3);
       }
 
       .nav-links {
@@ -312,13 +400,12 @@
         top: 100%;
         left: 0;
         right: 0;
-        background: #ffffff; /* ✅ Change background to white */
+        background: white;
         padding: 20px;
         flex-direction: column;
-        width: 100%;
-        z-index: 1000;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
+    
     
 
       .nav-links.active {
@@ -395,10 +482,11 @@
           <h2>Progress Tracker</h2>
         </div>
         <button class="menu-toggle" id="mobile-menu">
-          <i class="fas fa-bars"></i> <!-- ✅ Hamburger icon -->
+          <i class="fas fa-bars"></i>
         </button>
         <ul class="nav-links" id="nav-links">
-          <li><a href="#about" class="btn">About</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#about">About</a></li>
           <% if (user) { %>
             <li><a href="/dashboard" class="btn">Dashboard</a></li>
             <li><a href="/logout" class="btn">Logout</a></li>
@@ -427,7 +515,7 @@
 </div>
 
 <!-- Features Section -->
-<section class="features-wrapper fade-in">
+<section class="features-wrapper fade-in" id="features">
   <h2>Our Key Features</h2>
   <div class="feature-container">
     <div class="feature">
@@ -449,7 +537,7 @@
 </section>
 
 <!-- About Section -->
-<section class="about fade-in">
+<section class="about fade-in" id="about">
   <h2>About Us</h2>
   <p>At Progress Tracker, we believe that tracking progress is key to success.</p>
   <button onclick="window.location.href='/register'">Join Us Today</button>
@@ -470,32 +558,40 @@
     document.addEventListener("DOMContentLoaded", function () {
       const mobileMenu = document.getElementById("mobile-menu");
       const navLinks = document.getElementById("nav-links");
-    
-      // Ensure menu is hidden initially
-      navLinks.style.display = "none";
-    
-      // Toggle menu on click
+  
+      // Ensure menu is hidden initially on mobile
+      if (window.innerWidth <= 768) {
+        navLinks.style.display = "none";
+      }
+  
+      // Toggle menu on click (for mobile only)
       mobileMenu.addEventListener("click", function () {
-        navLinks.classList.toggle("active");
-        navLinks.style.display = navLinks.classList.contains("active") ? "flex" : "none";
-      });
-    
-      // Close menu when clicking outside
-      document.addEventListener("click", function (event) {
-        if (!mobileMenu.contains(event.target) && !navLinks.contains(event.target)) {
-          navLinks.classList.remove("active");
-          navLinks.style.display = "none";
+        if (window.innerWidth <= 768) {
+          navLinks.classList.toggle("active");
+          navLinks.style.display = navLinks.classList.contains("active") ? "flex" : "none";
         }
       });
-    
-      // Close menu when clicking a link
+  
+      // Close menu when clicking outside (for mobile only)
+      document.addEventListener("click", function (event) {
+        if (window.innerWidth <= 768) {
+          if (!mobileMenu.contains(event.target) && !navLinks.contains(event.target)) {
+            navLinks.classList.remove("active");
+            navLinks.style.display = "none";
+          }
+        }
+      });
+  
+      // Close menu when clicking a link (for mobile only)
       document.querySelectorAll(".nav-links a").forEach((link) => {
         link.addEventListener("click", function () {
-          navLinks.classList.remove("active");
-          navLinks.style.display = "none";
+          if (window.innerWidth <= 768) {
+            navLinks.classList.remove("active");
+            navLinks.style.display = "none";
+          }
         });
       });
-    
+  
       // Remove Preloader when Page Loads
       window.addEventListener("load", () => {
         const preloader = document.getElementById("preloader");
@@ -503,7 +599,7 @@
         setTimeout(() => {
           preloader.style.display = "none";
         }, 500);
-    
+  
         // Show animated sections
         document.querySelectorAll(".fade-in").forEach((el, index) => {
           setTimeout(() => {
@@ -511,7 +607,7 @@
           }, index * 300);
         });
       });
-    
+  
       // Scroll animations
       const fadeElements = document.querySelectorAll(".fade-in");
       const observer = new IntersectionObserver(
@@ -525,13 +621,24 @@
         },
         { threshold: 0.2 }
       );
-    
+  
       fadeElements.forEach((el) => {
         observer.observe(el);
       });
     });
-    
-    
+  
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const section = document.querySelector(this.getAttribute('href'));
+        if (section) {
+          section.scrollIntoView({
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
   </script>
 </body>
 </html>
