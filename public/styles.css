@@ -151,16 +151,15 @@ nav a:hover {
   transition: width 0.5s ease-in-out;
 }
 
-.progress-bar {
+progress-bar {
   width: 100%;
   background-color: #ecf0f1; /* Light gray background */
   border-radius: 12px;
   overflow: hidden;
-  position: relative;
   margin: 10px 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
-
 .progress-bar .progress {
   height: 20px; /* Thicker progress bar */
   width: 0; /* Initial width, updated dynamically */
@@ -179,6 +178,19 @@ nav a:hover {
   transition: width 0.5s ease-in-out; /* Smooth animation */
   position: relative;
 }
+
+.progress-bar .progress::after {
+  content: attr(data-progress); /* Dynamically set via JavaScript */
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
 
 .progress-item {
   background-color: white;
