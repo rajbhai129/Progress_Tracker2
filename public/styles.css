@@ -169,7 +169,11 @@ nav a:hover {
   justify-content: flex-end;
 }
 
-
+.checkmark {
+  color: green;
+  font-size: 1.2em;
+  margin-left: 5px;
+}
 
 .progress-bar .progress {
   height: 20px; /* Thicker progress bar */

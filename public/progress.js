@@ -6,18 +6,29 @@ async function fetchProgressData() {
   try {
     const response = await fetch("/get-structure");
     const data = await response.json();
-    
+
     const subjectsProgressContainer = document.getElementById("subjects-progress");
     subjectsProgressContainer.innerHTML = "";
 
+    let overallProgress = 0;
+    let overallWeightage = 0;
+
     data.subjects.forEach((subject, index) => {
       setTimeout(() => {
-        const subjectElement = createProgressElement(subject, calculateSubjectProgress(subject));
+        const subjectProgress = calculateSubjectProgress(subject);
+        overallProgress += subjectProgress * subject.weightage;
+        overallWeightage += Number.parseFloat(subject.weightage);
+
+        const subjectElement = createProgressElement(subject, subjectProgress);
         subjectsProgressContainer.appendChild(subjectElement);
+
+        // Update overall progress after each subject is added
+        if (index === data.subjects.length - 1) {
+          const totalProgress = overallWeightage > 0 ? overallProgress / overallWeightage : 0;
+          updateOverallProgress(totalProgress);
+        }
       }, index * 100); // Delayed appearance for smooth effect
     });
-
-    updateOverallProgress(0); // Reset progress
   } catch (error) {
     console.error("Error fetching progress data:", error);
   }
@@ -25,23 +36,23 @@ async function fetchProgressData() {
 
 
 function updateProgress(subjects) {
-  const subjectsProgressContainer = document.getElementById("subjects-progress")
-  subjectsProgressContainer.innerHTML = ""
+  const subjectsProgressContainer = document.getElementById("subjects-progress");
+  subjectsProgressContainer.innerHTML = "";
 
-  let overallProgress = 0
-  let overallWeightage = 0
+  let overallProgress = 0;
+  let overallWeightage = 0;
 
   subjects.forEach((subject) => {
-    const subjectProgress = calculateSubjectProgress(subject)
-    overallProgress += subjectProgress * subject.weightage
-    overallWeightage += Number.parseFloat(subject.weightage)
+    const subjectProgress = calculateSubjectProgress(subject);
+    overallProgress += subjectProgress * subject.weightage;
+    overallWeightage += Number.parseFloat(subject.weightage);
 
-    const subjectElement = createProgressElement(subject, subjectProgress)
-    subjectsProgressContainer.appendChild(subjectElement)
-  })
+    const subjectElement = createProgressElement(subject, subjectProgress);
+    subjectsProgressContainer.appendChild(subjectElement);
+  });
 
-  const totalProgress = overallWeightage > 0 ? overallProgress / overallWeightage : 0
-  updateOverallProgress(totalProgress)
+  const totalProgress = overallWeightage > 0 ? overallProgress / overallWeightage : 0;
+  updateOverallProgress(totalProgress);
 }
 
 function calculateSubjectProgress(subject) {
@@ -178,11 +189,25 @@ function createChapterElement(chapter, chapterProgress) {
   return chapterElement;
 }
 function updateOverallProgress(progress) {
-  const overallProgressBar = document.getElementById("overall-progress")
-  const overallProgressText = document.getElementById("overall-progress-text")
-  const progressPercentage = (progress * 100).toFixed(2)
+  const overallProgressBar = document.getElementById("overall-progress");
+  const overallProgressText = document.getElementById("overall-progress-text");
+  const progressPercentage = (progress * 100).toFixed(2);
 
-  overallProgressBar.style.width = `${progressPercentage}%`
-  overallProgressText.textContent = `${progressPercentage}% of total syllabus completed`
+  // Update the progress bar width
+  overallProgressBar.style.width = `${progressPercentage}%`;
+
+  // Update the progress text
+  overallProgressText.textContent = `${progressPercentage}% of total syllabus completed`;
+
+  // Add a checkmark when progress reaches 100%
+  if (progressPercentage >= 100) {
+    overallProgressText.innerHTML += ` <span class="checkmark">✔️</span>`;
+  } else {
+    // Remove the checkmark if progress is less than 100%
+    const checkmark = overallProgressText.querySelector(".checkmark");
+    if (checkmark) {
+      checkmark.remove();
+    }
+  }
 }
 
