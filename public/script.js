@@ -44,7 +44,6 @@ async function fetchChaptersAndComponents() {
   }
 }
 
-
 function generateAvatarColor(name) {
   const colors = [
     "#ffadad", "#ffda77", "#a0c4ff", "#bdb2ff", "#ffc6ff",
