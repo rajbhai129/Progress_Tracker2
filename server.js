@@ -334,31 +334,40 @@ app.get("/dashboard", (req, res) => {
   
   app.get("/get-structure", isAuthenticated, async (req, res) => {
     try {
-      const subjects = await pool.query("SELECT * FROM subjects WHERE user_id = $1", [req.session.userId])
-      const chapters = await pool.query("SELECT * FROM chapters WHERE user_id = $1", [req.session.userId])
-      const components = await pool.query("SELECT * FROM components WHERE user_id = $1", [req.session.userId])
+      // Fetch subjects, chapters, and components for the logged-in user
+      const subjects = await pool.query("SELECT * FROM subjects WHERE user_id = $1", [req.session.userId]);
+      const chapters = await pool.query("SELECT * FROM chapters WHERE user_id = $1", [req.session.userId]);
+      const components = await pool.query("SELECT * FROM components WHERE user_id = $1", [req.session.userId]);
   
+      // Build the nested structure
       const structure = subjects.rows.map((subject) => ({
-        ...subject,
+        id: subject.id,
+        name: subject.name,
+        weightage: subject.weightage,
         chapters: chapters.rows
           .filter((chapter) => chapter.subject_id === subject.id)
           .map((chapter) => ({
-            ...chapter,
+            id: chapter.id,
+            name: chapter.name,
+            weightage: chapter.weightage,
             components: components.rows
               .filter((component) => component.chapter_id === chapter.id)
               .map((component) => ({
-                ...component,
-                completed: component.completed || false,
+                id: component.id,
+                name: component.name,
+                weightage: component.weightage,
+                completed: component.completed || false, // Ensure completed is a boolean
               })),
           })),
-      }))
+      }));
   
-      res.json({ subjects: structure })
+      // Send the structured data as JSON
+      res.json({ subjects: structure });
     } catch (err) {
-      console.error("Error fetching structure:", err)
-      res.status(500).json({ error: "Error fetching structure" })
+      console.error("Error fetching structure:", err);
+      res.status(500).json({ error: "Error fetching structure" });
     }
-  })
+  });
   
   app.get("/progress", isAuthenticated, (req, res) => {
     res.render("progress")

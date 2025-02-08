@@ -30,6 +30,7 @@ async function fetchChaptersAndComponents() {
     const subjectsContainer = document.getElementById("subjects");
     subjectsContainer.innerHTML = "";
 
+    // Render each subject with its chapters and components
     data.subjects.forEach((subject, index) => {
       setTimeout(() => {
         const subjectElement = createSubjectElement(subject);
