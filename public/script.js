@@ -505,9 +505,12 @@ function calculateOverallProgress() {
 }
 
 function updateProgressBar(progressBarElement, progress) {
+  // Change this function
   const progressElement = progressBarElement.querySelector(".progress");
-  progressElement.style.width = `${progress * 100}%`;
-  progressElement.setAttribute("data-progress", `${(progress * 100).toFixed(2)}%`); // Add percentage label
+  const progressPercentage = (progress * 100).toFixed(2);
+  progressElement.style.width = `${progressPercentage}%`;
+  // Add data attribute for the label
+  progressElement.setAttribute("data-progress", `${progressPercentage}%`);
 }
 
 function updateOverallProgress(progress) {

@@ -151,23 +151,24 @@ nav a:hover {
   transition: width 0.5s ease-in-out;
 }
 
-progress-bar {
+.progress-bar {
   width: 100%;
-  background-color: #ecf0f1; /* Light gray background */
-  border-radius: 12px;
+  height: 20px;
+  background-color: #ecf0f1;
+  border-radius: 10px;
   overflow: hidden;
   margin: 10px 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  position: relative;
 }
 .progress-bar .progress {
-  height: 20px; /* Thicker progress bar */
-  width: 0; /* Initial width, updated dynamically */
-  background: linear-gradient(90deg, #2ecc71, #3498db); /* Gradient from green to blue */
-  border-radius: 12px;
-  transition: width 0.5s ease-in-out; /* Smooth animation */
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  transition: width 0.3s ease-in-out;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
+
 
 
 .progress-bar .progress {
@@ -180,17 +181,20 @@ progress-bar {
 }
 
 .progress-bar .progress::after {
-  content: attr(data-progress); /* Dynamically set via JavaScript */
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
+  content: attr(data-progress);
+  padding-right: 8px;
   color: white;
   font-size: 12px;
   font-weight: bold;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
+#overall-progress {
+  background: white;
+  padding: 20px;
+  border-radius: var(--border-radius);
+  margin: 20px 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
 
 .progress-item {
   background-color: white;
