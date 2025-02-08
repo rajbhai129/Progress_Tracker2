@@ -172,7 +172,7 @@ progress-bar {
 
 .progress-bar .progress {
   height: 20px; /* Thicker progress bar */
-  width: 0; /* Initial width, updated dynamically */
+  width: 50%; /* Initial width, updated dynamically */
   background: linear-gradient(90deg, #2ecc71, #3498db); /* Gradient from green to blue */
   border-radius: 12px;
   transition: width 0.5s ease-in-out; /* Smooth animation */
