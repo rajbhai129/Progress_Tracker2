@@ -91,7 +91,6 @@ function createProgressElement(subject, subjectProgress) {
   subjectElement.classList.add("progress-item", "subject");
   const progressPercentage = (subjectProgress * 100).toFixed(2);
 
-  // Generate a random color for the avatar
   const avatarColor = generateAvatarColor(subject.name);
 
   subjectElement.innerHTML = `
@@ -178,7 +177,6 @@ function createChapterElement(chapter, chapterProgress) {
 
   return chapterElement;
 }
-
 function updateOverallProgress(progress) {
   const overallProgressBar = document.getElementById("overall-progress")
   const overallProgressText = document.getElementById("overall-progress-text")
