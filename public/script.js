@@ -17,6 +17,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelector("#add-subject-form").addEventListener("submit", addSubject)
 })
 
+
+
+
+
+
 async function fetchChaptersAndComponents() {
   try {
     const response = await fetch("/get-structure");
@@ -32,6 +37,7 @@ async function fetchChaptersAndComponents() {
       }, index * 100); // Staggered delay for better effect
     });
 
+    // Update progress after rendering
     updateProgress();
   } catch (error) {
     console.error("Error fetching structure:", error);
@@ -415,9 +421,9 @@ async function deleteComponent(componentId) {
 }
 
 async function updateComponentProgress(event) {
-  const checkbox = event.target
-  const componentId = checkbox.closest(".component").dataset.id
-  const completed = checkbox.checked
+  const checkbox = event.target;
+  const componentId = checkbox.closest(".component").dataset.id;
+  const completed = checkbox.checked;
 
   try {
     const response = await fetch("/update-progress", {
@@ -426,16 +432,16 @@ async function updateComponentProgress(event) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ componentId, completed }),
-    })
+    });
 
     if (response.ok) {
       // Recalculate progress for the entire structure
-      await fetchChaptersAndComponents()
+      updateProgress();
     } else {
-      console.error("Failed to update progress")
+      console.error("Failed to update progress");
     }
   } catch (error) {
-    console.error("Error:", error)
+    console.error("Error:", error);
   }
 }
 
@@ -450,74 +456,80 @@ function updateProgress() {
 }
 
 function calculateSubjectProgress(subjectElement) {
-  const chapters = subjectElement.querySelectorAll(".chapter")
-  let totalProgress = 0
-  let totalWeightage = 0
+  const chapters = subjectElement.querySelectorAll(".chapter");
+  let totalProgress = 0;
+  let totalWeightage = 0;
 
   chapters.forEach((chapter) => {
-    const chapterWeightage = Number.parseFloat(chapter.querySelector("h4").textContent.match(/(\d+(?:\.\d+)?)%/)[1])
-    const chapterProgress = calculateChapterProgress(chapter)
-    totalProgress += chapterProgress * chapterWeightage
-    totalWeightage += chapterWeightage
-  })
+    const chapterWeightage = Number.parseFloat(chapter.querySelector("h4").textContent.match(/(\d+(?:\.\d+)?)%/)[1]);
+    const chapterProgress = calculateChapterProgress(chapter);
+    totalProgress += chapterProgress * chapterWeightage;
+    totalWeightage += chapterWeightage;
+  });
 
-  return totalWeightage > 0 ? totalProgress / totalWeightage : 0
+  const progress = totalWeightage > 0 ? totalProgress / totalWeightage : 0;
+  updateProgressBar(subjectElement.querySelector(".progress-bar"), progress);
+  return progress;
 }
 
 function calculateChapterProgress(chapterElement) {
-  const components = chapterElement.querySelectorAll(".component")
-  let totalProgress = 0
-  let totalWeightage = 0
+  const components = chapterElement.querySelectorAll(".component");
+  let totalProgress = 0;
+  let totalWeightage = 0;
 
   components.forEach((component) => {
-    const weightage = Number.parseFloat(component.textContent.match(/(\d+(?:\.\d+)?)%/)[1])
-    const completed = component.querySelector("input").checked
-    totalProgress += completed ? weightage : 0
-    totalWeightage += weightage
-  })
+    const weightage = Number.parseFloat(component.textContent.match(/(\d+(?:\.\d+)?)%/)[1]);
+    const completed = component.querySelector("input").checked;
+    totalProgress += completed ? weightage : 0;
+    totalWeightage += weightage;
+  });
 
-  const progress = totalWeightage > 0 ? totalProgress / totalWeightage : 0
-  updateProgressBar(chapterElement.querySelector(".progress-bar"), progress)
-  return progress
+  const progress = totalWeightage > 0 ? totalProgress / totalWeightage : 0;
+  updateProgressBar(chapterElement.querySelector(".progress-bar"), progress);
+  return progress;
 }
 
 function calculateOverallProgress() {
-  const subjects = document.querySelectorAll(".subject")
-  let totalProgress = 0
-  let totalWeightage = 0
+  const subjects = document.querySelectorAll(".subject");
+  let totalProgress = 0;
+  let totalWeightage = 0;
 
   subjects.forEach((subject) => {
-    const weightage = Number.parseFloat(subject.querySelector("h3").textContent.match(/(\d+(?:\.\d+)?)%/)[1])
-    const progress = calculateSubjectProgress(subject)
-    totalProgress += progress * weightage
-    totalWeightage += weightage
-  })
+    const weightage = Number.parseFloat(subject.querySelector("h3").textContent.match(/(\d+(?:\.\d+)?)%/)[1]);
+    const progress = calculateSubjectProgress(subject);
+    totalProgress += progress * weightage;
+    totalWeightage += weightage;
+  });
 
-  return totalWeightage > 0 ? totalProgress / totalWeightage : 0
+  return totalWeightage > 0 ? totalProgress / totalWeightage : 0;
 }
 
 function updateProgressBar(progressBarElement, progress) {
-  const progressElement = progressBarElement.querySelector(".progress")
-  progressElement.style.width = `${progress * 100}%`
+  const progressElement = progressBarElement.querySelector(".progress");
+  progressElement.style.width = `${progress * 100}%`;
+  progressElement.setAttribute("data-progress", `${(progress * 100).toFixed(2)}%`); // Add percentage label
 }
 
 function updateOverallProgress(progress) {
-  const overallProgressElement = document.getElementById("overall-progress")
+  const overallProgressElement = document.getElementById("overall-progress");
   if (!overallProgressElement) {
-    const progressElement = document.createElement("div")
-    progressElement.id = "overall-progress"
+    // Create overall progress element if it doesn't exist
+    const progressElement = document.createElement("div");
+    progressElement.id = "overall-progress";
     progressElement.innerHTML = `
       <h2>Overall Progress</h2>
       <div class="progress-bar">
-        <div class="progress" style="width: ${progress * 100}%"></div>
+        <div class="progress" style="width: ${progress * 100}%" data-progress="${(progress * 100).toFixed(2)}%"></div>
       </div>
-      <p>${(progress * 100).toFixed(2)}%</p>
-    `
-    document.body.insertBefore(progressElement, document.body.firstChild)
+      <p>${(progress * 100).toFixed(2)}% of total syllabus completed</p>
+    `;
+    document.body.insertBefore(progressElement, document.body.firstChild);
   } else {
-    const progressBar = overallProgressElement.querySelector(".progress")
-    progressBar.style.width = `${progress * 100}%`
-    overallProgressElement.querySelector("p").textContent = `${(progress * 100).toFixed(2)}%`
+    // Update existing overall progress element
+    const progressBar = overallProgressElement.querySelector(".progress");
+    progressBar.style.width = `${progress * 100}%`;
+    progressBar.setAttribute("data-progress", `${(progress * 100).toFixed(2)}%`);
+    overallProgressElement.querySelector("p").textContent = `${(progress * 100).toFixed(2)}% of total syllabus completed`;
   }
 }
 
