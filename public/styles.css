@@ -170,7 +170,7 @@ nav a:hover {
 }
 
 .checkmark {
-  color: green;
+  color: #28a745; /* Green color for checkmark */
   font-size: 1.2em;
   margin-left: 5px;
 }
@@ -193,12 +193,22 @@ nav a:hover {
 }
 
 #overall-progress {
-  background: white;
-  padding: 20px;
-  border-radius: var(--border-radius);
-  margin: 20px 0;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  height: 12px; /* Thinner progress bar */
+  width: 0%; /* Default: No progress */
+  background: linear-gradient(90deg, #6a11cb, #2575fc); /* Gradient from purple to blue */
+  border-radius: 20px; /* Rounded corners */
+  transition: width 0.5s ease-in-out; /* Smooth animation */
+  box-shadow: 0 0 10px rgba(106, 17, 203, 0.5); /* Glow effect */
 }
+
+
+#overall-progress-text {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333; /* Dark text color */
+}
+
 
 .progress-item {
   background-color: white;
