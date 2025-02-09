@@ -153,15 +153,12 @@ nav a:nth-child(3) { margin-left: auto; }   /* Logout */
 
 /* 🌟 Progress Bar Wrapper */
 .progress-container {
-  background: white;
-  border-radius: 15px;
-  padding: 2rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  margin: 2rem 0;
-  transition: transform 0.3s ease;
-  border: 1px solid rgba(52, 152, 219, 0.1);
-  position: relative;
+  width: 100%;
+  background: #f0f3f7;
+  border-radius: 10px;
   overflow: hidden;
+  margin: 10px 0;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 /* 🌟 Actual Progress Bar */
@@ -179,13 +176,12 @@ nav a:nth-child(3) { margin-left: auto; }   /* Logout */
   position: relative;
 }
 
-.progress-bar {
-  width: 100%;
-  height: 20px;
-  background-color: #ecf0f1;
+.progress-bar .progress {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #4776E6, #8E54E9);
   border-radius: 10px;
-  overflow: hidden;
-  margin: 10px 0;
+  transition: width 0.5s ease-in-out;
 }
 .progress-bar .progress {
   height: 100%;
@@ -273,13 +269,13 @@ nav a:nth-child(3) { margin-left: auto; }   /* Logout */
   font-weight: 600;
 }
 
+/* Overall Progress Text */
 #overall-progress-text {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: bold;
   color: #2c3e50;
-  font-size: 1rem;
-  margin-top: 0.8rem;
-  font-weight: 500;
 }
-
 #overall-progress .progress {
   height: 100%;
   background: linear-gradient(
