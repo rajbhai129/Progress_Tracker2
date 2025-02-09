@@ -60,6 +60,10 @@ nav a:hover {
   color: var(--secondary-color);
 }
 
+nav a:nth-child(1) { margin-right: auto; }  /* Home */
+nav a:nth-child(2) { margin: 0 auto; }      /* Progress */
+nav a:nth-child(3) { margin-left: auto; }   /* Logout */
+
 /* Layout Hierarchy */
 .hierarchy {
   display: flex;
@@ -241,6 +245,14 @@ nav a:hover {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   margin: 2rem 0;
 }
+#overall-progress .progress-bar {
+  background: #f0f3f7;
+  height: 8px; /* Much thinner now */
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
 
 #overall-progress h2 {
   color: #2c3e50;
@@ -256,10 +268,44 @@ nav a:hover {
 }
 
 
+#overall-progress .progress {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #4776E6,
+    #8E54E9
+  );
+  background-size: 200% 100%;
+  animation: gradientSlide 3s ease infinite;
+  border-radius: 4px;
+  transition: width 0.5s ease-in-out;
+}
+
 #overall-progress p {
   margin: 0.5rem 0;
   font-size: 1rem;
   color: var(--text-dark);
+}
+
+#overall-progress .progress::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 16px 16px;
+  animation: stripeSlide 1s linear infinite;
 }
 
 .progress-item {
@@ -490,7 +536,7 @@ button:hover {
     background-position: 0 0;
   }
   100% {
-    background-position: 20px 0;
+    background-position: 16px 0;
   }
 }
 
