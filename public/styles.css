@@ -146,12 +146,15 @@ nav a:hover {
 
 /* 🌟 Progress Bar Wrapper */
 .progress-container {
-  width: 100%;
-  background: #e0e0e0; /* Light gray background */
-  border-radius: 20px; /* Rounded corners */
-  overflow: hidden;
+  background: white;
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  margin: 2rem 0;
+  transition: transform 0.3s ease;
+  border: 1px solid rgba(52, 152, 219, 0.1);
   position: relative;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  overflow: hidden;
 }
 
 /* 🌟 Actual Progress Bar */
