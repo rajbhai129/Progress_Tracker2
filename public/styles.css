@@ -24,23 +24,36 @@ body {
   padding: 20px;
   max-width: 1100px;
   margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
-
+h1 {
+  font-size: 2.5rem;
+  margin: 0;
+  padding: 1rem 0;
+  color: var(--text-dark);
+}
+h2 {
+  font-size: 1.8rem;
+  margin: 1.5rem 0 1rem 0;
+  color: var(--text-dark);
+}
 /* Navigation Bar */
 nav {
   background-color: var(--primary-color);
-  padding: 10px;
+  padding: 1rem;
   border-radius: var(--border-radius);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  margin-bottom: 2rem;
 }
 
 nav a {
   color: white;
-  font-weight: 600;
-  margin: 0 10px;
   text-decoration: none;
+  padding: 0.5rem 1rem;
+  margin: 0 0.5rem;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
 }
 
 nav a:hover {
@@ -192,29 +205,17 @@ nav a:hover {
 }
 
 #overall-progress {
-  height: 12px; /* Thinner progress bar */
-  width: 0%; /* Default: No progress */
-  background: linear-gradient(90deg, #6a11cb, #2575fc); /* Gradient from purple to blue */
-  border-radius: 20px; /* Rounded corners */
-  transition: width 0.5s ease-in-out; /* Smooth animation */
-  box-shadow: 0 0 10px rgba(106, 17, 203, 0.5); /* Glow effect */
-
-   
-  background: linear-gradient(
-    45deg,
-    rgba(255, 255, 255, 0.15) 25%,
-    transparent 25%,
-    transparent 50%,
-    rgba(255, 255, 255, 0.15) 50%,
-    rgba(255, 255, 255, 0.15) 75%,
-    transparent 75%,
-    transparent
-  );
-  background-size: 20px 20px; /* Size of the stripes */
-
-
+  background: white;
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
 }
-
+#overall-progress h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  color: var(--text-dark);
+}
 
 #overall-progress-text {
   margin-top: 10px;
@@ -224,6 +225,11 @@ nav a:hover {
 
 }
 
+#overall-progress p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  color: var(--text-dark);
+}
 
 .progress-item {
   background-color: white;
@@ -247,6 +253,33 @@ nav a:hover {
   color: var(--text-dark);
 }
 
+
+#add-subject-form {
+  background: white;
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+#add-subject-form input {
+  flex: 1;
+  min-width: 200px;
+}
+
+#add-subject-form button {
+  min-width: 120px;
+}
+
+/* Subjects Container */
+#subjects {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
 
 /* Accordion */
 .subject-content, .chapter-content {
