@@ -199,15 +199,17 @@ function updateOverallProgress(progress) {
   // Update the progress text
   overallProgressText.textContent = `${progressPercentage}% of total syllabus completed`;
 
-  // Add a checkmark when progress reaches 100%
+  // Add a checkmark and pulse animation when progress reaches 100%
   if (progressPercentage >= 100) {
     overallProgressText.innerHTML += ` <span class="checkmark">✔️</span>`;
+    overallProgressBar.classList.add("complete");
   } else {
-    // Remove the checkmark if progress is less than 100%
+    // Remove the checkmark and pulse animation if progress is less than 100%
     const checkmark = overallProgressText.querySelector(".checkmark");
     if (checkmark) {
       checkmark.remove();
     }
+    overallProgressBar.classList.remove("complete");
   }
 }
 

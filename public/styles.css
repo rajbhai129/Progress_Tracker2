@@ -134,12 +134,11 @@ nav a:hover {
 /* 🌟 Progress Bar Wrapper */
 .progress-container {
   width: 100%;
-  background: #ecf0f1;
-  border-radius: 12px;
-  padding: 3px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background: #e0e0e0; /* Light gray background */
+  border-radius: 20px; /* Rounded corners */
   overflow: hidden;
   position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
 /* 🌟 Actual Progress Bar */
@@ -199,10 +198,31 @@ nav a:hover {
   border-radius: 20px; /* Rounded corners */
   transition: width 0.5s ease-in-out; /* Smooth animation */
   box-shadow: 0 0 10px rgba(106, 17, 203, 0.5); /* Glow effect */
+
+   
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 20px 20px; /* Size of the stripes */
+
+
 }
 
 
+#overall-progress-text {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333; /* Dark text color */
 
+}
 
 
 .progress-item {
@@ -386,6 +406,18 @@ button:hover {
     transform: translateY(0);
   }
 }
+
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+#overall-progress.complete {
+  animation: pulse 1s infinite;
+}
+
 
 /* Apply Animation to Subjects, Chapters, and Components */
 .subject, .chapter, .component, .progress-item {
