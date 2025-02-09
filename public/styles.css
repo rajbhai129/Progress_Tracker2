@@ -159,11 +159,17 @@ nav a:hover {
 
 /* 🌟 Actual Progress Bar */
 .progress {
-  height: 15px;  /* 🔥 Thicker progress bar */
-  width: 0%;  /* Default: No progress */
-  background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
-  border-radius: 10px;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #4776E6,
+    #8E54E9
+  );
+  background-size: 200% 100%;
+  animation: gradientSlide 3s ease infinite;
+  border-radius: 6px;
   transition: width 0.5s ease-in-out;
+  position: relative;
 }
 
 .progress-bar {
@@ -199,6 +205,27 @@ nav a:hover {
   position: relative;
 }
 
+.progress::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 20px 20px;
+  animation: stripeSlide 1s linear infinite;
+}
+
 .progress-bar .progress::after {
   content: attr(data-progress);
   padding-right: 8px;
@@ -209,24 +236,25 @@ nav a:hover {
 
 #overall-progress {
   background: white;
-  padding: 1.5rem;
-  border-radius: var(--border-radius);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin: 2rem 0;
 }
+
 #overall-progress h2 {
-  margin: 0 0 1rem 0;
-  font-size: 1.5rem;
-  color: var(--text-dark);
+  color: #2c3e50;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
 }
-
 #overall-progress-text {
-  margin-top: 10px;
-  font-size: 14px;
-  font-weight: bold;
-  color: #333; /* Dark text color */
-
+  color: #2c3e50;
+  font-size: 1rem;
+  margin-top: 0.8rem;
+  font-weight: 500;
 }
+
 
 #overall-progress p {
   margin: 0.5rem 0;
@@ -246,7 +274,9 @@ nav a:hover {
 .progress-item:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
-
+.progress-bar:hover .progress {
+  box-shadow: 0 0 10px rgba(71, 118, 230, 0.5);
+}
 
 /* 🌟 Percentage Label */
 .progress-label {
@@ -443,13 +473,43 @@ button:hover {
   }
 }
 
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+@keyframes gradientSlide {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
+@keyframes stripeSlide {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 20px 0;
+  }
+}
+
+.progress.complete {
+  background: linear-gradient(90deg, #00b09b, #96c93d);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 176, 155, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 176, 155, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 176, 155, 0);
+  }
+}
 #overall-progress.complete {
   animation: pulse 1s infinite;
 }
