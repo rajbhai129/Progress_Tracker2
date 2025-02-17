@@ -273,7 +273,7 @@ nav a:nth-child(3) { margin-left: auto; }   /* Logout */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   margin: 2rem 0;
   width: 100%; /* Full width of the body */
-  margin: 2rem auto; /* Centered horizontally */
+  box-sizing: border-box; /* Ensure padding is included in the width */
 }
 
 #overall-progress .progress-bar {
@@ -332,6 +332,7 @@ nav a:nth-child(3) { margin-left: auto; }   /* Logout */
   left: 0;
   right: 0;
   bottom: 0;
+  height: 100%; /* Ensure it fills the height of the progress bar */
   background-image: linear-gradient(
     45deg,
     rgba(255, 255, 255, 0.15) 25%,
