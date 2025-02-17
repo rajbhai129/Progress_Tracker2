@@ -189,21 +189,12 @@ function createChapterElement(chapter, chapterProgress) {
   return chapterElement;
 }
 function updateOverallProgress(progress) {
-  const overallProgressBar = document.getElementById("overall-progress");
+  const overallProgressBar = document.getElementById("overall-progress").querySelector(".progress");
   const overallProgressText = document.getElementById("overall-progress-text");
   const progressPercentage = (progress * 100).toFixed(2);
 
   // Update the progress bar width
   overallProgressBar.style.width = `${progressPercentage}%`;
-
-  // Update the progress bar color based on progress
-  if (progress < 0.3) {
-    overallProgressBar.style.backgroundColor = "#ff4444"; // Red for <30%
-  } else if (progress < 0.7) {
-    overallProgressBar.style.backgroundColor = "#ffd700"; // Yellow for 30-70%
-  } else {
-    overallProgressBar.style.backgroundColor = "#00c851"; // Green for >70%
-  }
 
   // Update the progress text
   overallProgressText.textContent = `${progressPercentage}% of total syllabus completed`;
@@ -211,14 +202,37 @@ function updateOverallProgress(progress) {
   // Add a checkmark when progress reaches 100%
   if (progressPercentage >= 100) {
     overallProgressText.innerHTML += ` <span class="checkmark">✔️</span>`;
-    overallProgressBar.style.backgroundColor = "#00c851"; // Ensure green at 100%
   } else {
-    // Remove the checkmark if progress is less than 100%
     const checkmark = overallProgressText.querySelector(".checkmark");
     if (checkmark) {
       checkmark.remove();
     }
   }
+}
+
+function calculateOverallProgress() {
+  const subjects = document.querySelectorAll(".subject");
+  let totalProgress = 0;
+  let totalWeightage = 0;
+
+  subjects.forEach((subject) => {
+    const weightage = Number.parseFloat(subject.querySelector("h3").textContent.match(/(\d+(?:\.\d+)?)%/)[1]);
+    const progress = calculateSubjectProgress(subject);
+    totalProgress += progress * weightage;
+    totalWeightage += weightage;
+  });
+
+  return totalWeightage > 0 ? totalProgress / totalWeightage : 0;
+}
+
+function updateProgress() {
+  document.querySelectorAll(".subject").forEach((subjectElement) => {
+    const subjectProgress = calculateSubjectProgress(subjectElement);
+    updateProgressBar(subjectElement.querySelector(".progress-bar"), subjectProgress);
+  });
+
+  const overallProgress = calculateOverallProgress();
+  updateOverallProgress(overallProgress);
 }
 
 
