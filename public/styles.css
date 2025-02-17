@@ -290,6 +290,7 @@ nav a:nth-child(3) { margin-left: auto; }   /* Logout */
   background: linear-gradient(90deg, #00b09b, #96c93d); /* New gradient color */
   border-radius: 15px;
   transition: width 0.5s ease-in-out;
+  position: relative; /* Ensure it is positioned correctly */
 }
 
 #overall-progress h2 {
