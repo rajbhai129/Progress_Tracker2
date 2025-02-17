@@ -196,12 +196,22 @@ function updateOverallProgress(progress) {
   // Update the progress bar width
   overallProgressBar.style.width = `${progressPercentage}%`;
 
+  // Update the progress bar color based on progress
+  if (progress < 0.3) {
+    overallProgressBar.style.backgroundColor = "#ff4444"; // Red for <30%
+  } else if (progress < 0.7) {
+    overallProgressBar.style.backgroundColor = "#ffd700"; // Yellow for 30-70%
+  } else {
+    overallProgressBar.style.backgroundColor = "#00c851"; // Green for >70%
+  }
+
   // Update the progress text
   overallProgressText.textContent = `${progressPercentage}% of total syllabus completed`;
 
   // Add a checkmark when progress reaches 100%
   if (progressPercentage >= 100) {
     overallProgressText.innerHTML += ` <span class="checkmark">✔️</span>`;
+    overallProgressBar.style.backgroundColor = "#00c851"; // Ensure green at 100%
   } else {
     // Remove the checkmark if progress is less than 100%
     const checkmark = overallProgressText.querySelector(".checkmark");
