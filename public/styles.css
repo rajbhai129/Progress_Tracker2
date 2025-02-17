@@ -153,11 +153,11 @@ nav a:nth-child(3) { margin-left: auto; }   /* Logout */
 
 /* 🌟 Progress Bar Wrapper */
 .progress-container {
-  width: 100%;
+  width: 60%; /* Reduced width */
+  margin: 10px auto; /* Centered */
   background: #f0f3f7;
   border-radius: 10px;
   overflow: hidden;
-  margin: 10px 0;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
@@ -176,21 +176,37 @@ nav a:nth-child(3) { margin-left: auto; }   /* Logout */
   position: relative;
 }
 
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+
 .progress-bar .progress {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #4776E6, #8E54E9);
+  background: linear-gradient(
+    90deg,
+    hsl(0, 100%, 50%),    /* Red */
+    hsl(60, 100%, 50%),   /* Yellow */
+    hsl(120, 100%, 50%)   /* Green */
+  );
   border-radius: 10px;
-  transition: width 0.5s ease-in-out;
+  transition: width 0.5s ease-in-out, background 0.5s ease;
+  position: relative;
 }
 .progress-bar .progress {
-  height: 100%;
-  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-  transition: width 0.3s ease-in-out;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  background: linear-gradient(
+    90deg,
+    #ff4444,    /* Red */
+    #ffd700,    /* Gold */
+    #00c851     /* Green */
+  );
+  background-size: 200% 100%;
+  animation: colorTransition 3s ease infinite;
 }
 
 .checkmark {
@@ -235,6 +251,18 @@ nav a:nth-child(3) { margin-left: auto; }   /* Logout */
   color: white;
   font-size: 12px;
   font-weight: bold;
+}
+
+.progress-bar .progress.low {
+  background: #ff4444; /* Red for <30% */
+}
+
+.progress-bar .progress.medium {
+  background: #ffd700; /* Yellow for 30-70% */
+}
+
+.progress-bar .progress.high {
+  background: #00c851; /* Green for >70% */
 }
 
 /* Overall Progress Bar Container */
@@ -547,7 +575,17 @@ button:hover {
     background-position: 16px 0;
   }
 }
-
+@keyframes colorTransition {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
 .progress.complete {
   background: linear-gradient(90deg, #00b09b, #96c93d);
   animation: pulse 1.5s ease-in-out infinite;
