@@ -520,6 +520,8 @@ button:hover {
   align-items: center;
   justify-content: space-between;
   transition: var(--transition-speed);
+  opacity: 1; /* Ensure components are fully visible */
+  animation: none; /* Disable animation */
 }
 
 /* Move Checkbox to Right */
@@ -598,7 +600,7 @@ button:hover {
 
 
 /* Apply Animation to Subjects, Chapters, and Components */
-.subject, .chapter, .component, .progress-item {
+.subject, .chapter, .progress-item {
   opacity: 0;
   animation: fadeIn 0.5s ease-in-out forwards;
 }

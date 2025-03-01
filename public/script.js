@@ -192,9 +192,9 @@ function createChapterElement(chapter) {
 }
 
 function createComponentElement(component) {
-  const componentElement = document.createElement("div")
-  componentElement.classList.add("component")
-  componentElement.dataset.id = component.id
+  const componentElement = document.createElement("div");
+  componentElement.classList.add("component");
+  componentElement.dataset.id = component.id;
 
   componentElement.innerHTML = `
     <label>
@@ -203,13 +203,13 @@ function createComponentElement(component) {
     </label>
     <button class="edit-component">Edit</button>
     <button class="delete-component">Delete</button>
-  `
+  `;
 
-  componentElement.querySelector("input").addEventListener("change", updateComponentProgress)
-  componentElement.querySelector(".edit-component").addEventListener("click", () => editComponent(component))
-  componentElement.querySelector(".delete-component").addEventListener("click", () => deleteComponent(component.id))
+  componentElement.querySelector("input").addEventListener("change", updateComponentProgress);
+  componentElement.querySelector(".edit-component").addEventListener("click", () => editComponent(component));
+  componentElement.querySelector(".delete-component").addEventListener("click", () => deleteComponent(component.id));
 
-  return componentElement
+  return componentElement;
 }
 
 async function addSubject(event) {
