@@ -14,13 +14,7 @@ function isAccordionOpen(id) {
 
 document.addEventListener("DOMContentLoaded", () => {
   fetchChaptersAndComponents()
-  document.querySelector("#add-subject-form").addEventListener("submit", addSubject)
 })
-
-
-
-
-
 
 async function fetchChaptersAndComponents() {
   try {
@@ -218,9 +212,13 @@ function createComponentElement(component, chapterElement) {
   `;
 
   const componentCheckbox = componentElement.querySelector("input[type='checkbox']");
-  componentCheckbox.addEventListener("change", () => {
-    updateComponentProgress();
+  componentCheckbox.addEventListener("change", async () => {
+    await updateComponentProgress(component.id, componentCheckbox.checked);
     updateChapterCheckbox(chapterElement);
+    const chapterProgress = calculateChapterProgress(chapterElement);
+    updateProgressBar(chapterElement.querySelector(".progress-bar"), chapterProgress);
+    const overallProgress = calculateOverallProgress();
+    updateOverallProgress(overallProgress);
   });
 
   componentElement.querySelector(".edit-component").addEventListener("click", () => editComponent(component));
@@ -437,11 +435,7 @@ async function deleteComponent(componentId) {
   }
 }
 
-async function updateComponentProgress(event) {
-  const checkbox = event.target;
-  const componentId = checkbox.closest(".component").dataset.id;
-  const completed = checkbox.checked;
-
+async function updateComponentProgress(componentId, completed) {
   try {
     const response = await fetch("/update-progress", {
       method: "POST",
@@ -451,10 +445,7 @@ async function updateComponentProgress(event) {
       body: JSON.stringify({ componentId, completed }),
     });
 
-    if (response.ok) {
-      // Recalculate progress for the entire structure
-      updateProgress();
-    } else {
+    if (!response.ok) {
       console.error("Failed to update progress");
     }
   } catch (error) {
@@ -573,4 +564,5 @@ function updateChapterCheckbox(chapterElement) {
 
   chapterCheckbox.checked = allChecked;
 }
+
 
