@@ -132,14 +132,15 @@ function createSubjectElement(subject) {
 
 
 function createChapterElement(chapter) {
-  const chapterElement = document.createElement("div")
-  chapterElement.classList.add("chapter")
-  chapterElement.dataset.id = chapter.id
+  const chapterElement = document.createElement("div");
+  chapterElement.classList.add("chapter");
+  chapterElement.dataset.id = chapter.id;
 
   chapterElement.innerHTML = `
     <div class="chapter-header">
       <h4>${chapter.name} (${chapter.weightage}%)</h4>
       <div>
+        <input type="checkbox" class="chapter-checkbox">
         <button class="edit-chapter">Edit</button>
         <button class="delete-chapter">Delete</button>
         <i class="fas fa-chevron-down accordion-icon"></i>
@@ -157,38 +158,46 @@ function createChapterElement(chapter) {
       </form>
       <div class="components"></div>
     </div>
-  `
+  `;
 
-  const chapterHeader = chapterElement.querySelector(".chapter-header")
-  const chapterContent = chapterElement.querySelector(".chapter-content")
-  const accordionIcon = chapterElement.querySelector(".accordion-icon")
+  const chapterHeader = chapterElement.querySelector(".chapter-header");
+  const chapterContent = chapterElement.querySelector(".chapter-content");
+  const accordionIcon = chapterElement.querySelector(".accordion-icon");
 
   if (isAccordionOpen(`chapter-${chapter.id}`)) {
-    chapterContent.classList.add("active")
-    accordionIcon.classList.add("active")
+    chapterContent.classList.add("active");
+    accordionIcon.classList.add("active");
   }
 
   chapterHeader.addEventListener("click", () => {
-    toggleAccordion(chapterHeader, `chapter-${chapter.id}`)
-  })
+    toggleAccordion(chapterHeader, `chapter-${chapter.id}`);
+  });
 
   chapterElement.querySelector(".edit-chapter").addEventListener("click", (e) => {
-    e.stopPropagation()
-    editChapter(chapter)
-  })
+    e.stopPropagation();
+    editChapter(chapter);
+  });
+
   chapterElement.querySelector(".delete-chapter").addEventListener("click", (e) => {
-    e.stopPropagation()
-    deleteChapter(chapter.id)
-  })
-  chapterElement.querySelector(".add-component").addEventListener("submit", addComponent)
+    e.stopPropagation();
+    deleteChapter(chapter.id);
+  });
 
-  const componentsContainer = chapterElement.querySelector(".components")
+  chapterElement.querySelector(".add-component").addEventListener("submit", addComponent);
+
+  // Add event listener for chapter checkbox
+  const chapterCheckbox = chapterElement.querySelector(".chapter-checkbox");
+  chapterCheckbox.addEventListener("change", () => {
+    toggleChapterCompletion(chapterElement, chapterCheckbox.checked);
+  });
+
+  const componentsContainer = chapterElement.querySelector(".components");
   chapter.components.forEach((component) => {
-    const componentElement = createComponentElement(component)
-    componentsContainer.appendChild(componentElement)
-  })
+    const componentElement = createComponentElement(component);
+    componentsContainer.appendChild(componentElement);
+  });
 
-  return chapterElement
+  return chapterElement;
 }
 
 function createComponentElement(component) {
@@ -534,5 +543,18 @@ function updateOverallProgress(progress) {
     progressBar.setAttribute("data-progress", `${(progress * 100).toFixed(2)}%`);
     overallProgressElement.querySelector("p").textContent = `${(progress * 100).toFixed(2)}% of total syllabus completed`;
   }
+}
+
+function toggleChapterCompletion(chapterElement, isCompleted) {
+  const components = chapterElement.querySelectorAll(".component input[type='checkbox']");
+  components.forEach((checkbox) => {
+    checkbox.checked = isCompleted;
+  });
+
+  // Update the progress for the chapter and overall progress
+  const chapterProgress = calculateChapterProgress(chapterElement);
+  updateProgressBar(chapterElement.querySelector(".progress-bar"), chapterProgress);
+  const overallProgress = calculateOverallProgress();
+  updateOverallProgress(overallProgress);
 }
 
