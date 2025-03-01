@@ -66,6 +66,8 @@ function updateOverallProgress(progress) {
   const overallProgressText = document.getElementById("overall-progress-text");
   const progressPercentage = (progress * 100).toFixed(2);
 
+  console.log(`Updating overall progress to ${progressPercentage}%`); // Debugging log
+
   // Update the progress bar width
   overallProgressBar.style.width = `${progressPercentage}%`;
 

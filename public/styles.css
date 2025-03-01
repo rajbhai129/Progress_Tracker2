@@ -272,14 +272,12 @@ nav a:nth-child(3) { margin-left: auto; }   /* Logout */
   border-radius: 15px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   margin: 2rem 0;
-  width: 100%; /* Full width of the body */
-  box-sizing: border-box; /* Ensure padding is included in the width */
 }
 
 #overall-progress .progress-bar {
   background: #f0f3f7;
-  height: 30px; /* Increased height for the progress bar */
-  border-radius: 15px;
+  height: 20px; /* Adjusted height */
+  border-radius: 10px;
   overflow: hidden;
   position: relative;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -287,10 +285,10 @@ nav a:nth-child(3) { margin-left: auto; }   /* Logout */
 
 #overall-progress .progress {
   height: 100%;
-  background: linear-gradient(90deg, #00b09b, #96c93d); /* New gradient color */
-  border-radius: 15px;
+  background: linear-gradient(90deg, #00b09b, #96c93d); /* Ensure visible color */
+  border-radius: 10px;
   transition: width 0.5s ease-in-out;
-  position: relative; /* Ensure it is positioned correctly */
+  position: relative;
 }
 
 #overall-progress h2 {
@@ -306,18 +304,6 @@ nav a:nth-child(3) { margin-left: auto; }   /* Logout */
   font-size: 14px;
   font-weight: bold;
   color: #2c3e50;
-}
-#overall-progress .progress {
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    #4776E6,
-    #8E54E9
-  );
-  background-size: 200% 100%;
-  animation: gradientSlide 3s ease infinite;
-  border-radius: 4px;
-  transition: width 0.5s ease-in-out;
 }
 
 #overall-progress p {
