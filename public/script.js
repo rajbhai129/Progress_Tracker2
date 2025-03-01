@@ -193,14 +193,17 @@ function createChapterElement(chapter) {
 
   const componentsContainer = chapterElement.querySelector(".components");
   chapter.components.forEach((component) => {
-    const componentElement = createComponentElement(component);
+    const componentElement = createComponentElement(component, chapterElement);
     componentsContainer.appendChild(componentElement);
   });
+
+  // Update chapter checkbox state after creating components
+  updateChapterCheckbox(chapterElement);
 
   return chapterElement;
 }
 
-function createComponentElement(component) {
+function createComponentElement(component, chapterElement) {
   const componentElement = document.createElement("div");
   componentElement.classList.add("component");
   componentElement.dataset.id = component.id;
@@ -214,7 +217,12 @@ function createComponentElement(component) {
     <button class="delete-component">Delete</button>
   `;
 
-  componentElement.querySelector("input").addEventListener("change", updateComponentProgress);
+  const componentCheckbox = componentElement.querySelector("input[type='checkbox']");
+  componentCheckbox.addEventListener("change", () => {
+    updateComponentProgress();
+    updateChapterCheckbox(chapterElement);
+  });
+
   componentElement.querySelector(".edit-component").addEventListener("click", () => editComponent(component));
   componentElement.querySelector(".delete-component").addEventListener("click", () => deleteComponent(component.id));
 
@@ -556,5 +564,13 @@ function toggleChapterCompletion(chapterElement, isCompleted) {
   updateProgressBar(chapterElement.querySelector(".progress-bar"), chapterProgress);
   const overallProgress = calculateOverallProgress();
   updateOverallProgress(overallProgress);
+}
+
+function updateChapterCheckbox(chapterElement) {
+  const components = chapterElement.querySelectorAll(".component input[type='checkbox']");
+  const chapterCheckbox = chapterElement.querySelector(".chapter-checkbox");
+  const allChecked = Array.from(components).every(checkbox => checkbox.checked);
+
+  chapterCheckbox.checked = allChecked;
 }
 
