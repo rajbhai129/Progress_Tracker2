@@ -16,8 +16,16 @@
         <a href="/logout">Logout</a>
     </nav>
 
+    <div id="progress-container">
+        <h2>Overall Progress</h2>
+        <div id="overall-progress" class="progress-bar">
+            <div class="progress"></div>
+        </div>
+        <p id="overall-progress-text">0% of total syllabus completed</p>
+    </div>
+
     <h2>Add Subject</h2>
-    <form id="add-subject-form">
+    <form id="add-subject-form" method="POST">
         <input type="text" name="name" placeholder="Subject Name" required>
         <input type="number" name="weightage" placeholder="Weightage (%)" required>
         <button type="submit">Add Subject</button>

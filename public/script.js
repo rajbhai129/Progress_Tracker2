@@ -13,8 +13,12 @@ function isAccordionOpen(id) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  fetchChaptersAndComponents()
-})
+  fetchChaptersAndComponents();
+
+  // Add event listener for the add subject form
+  const addSubjectForm = document.getElementById("add-subject-form");
+  addSubjectForm.addEventListener("submit", addSubject);
+});
 
 async function fetchChaptersAndComponents() {
   try {
