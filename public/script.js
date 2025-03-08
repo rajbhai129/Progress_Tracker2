@@ -14,10 +14,6 @@ function isAccordionOpen(id) {
 
 document.addEventListener("DOMContentLoaded", () => {
   fetchChaptersAndComponents();
-
-  // Add event listener for the add subject form
-  const addSubjectForm = document.getElementById("add-subject-form");
-  addSubjectForm.addEventListener("submit", addSubject);
 });
 
 async function fetchChaptersAndComponents() {
@@ -459,12 +455,12 @@ async function updateComponentProgress(componentId, completed) {
 
 function updateProgress() {
   document.querySelectorAll(".subject").forEach((subjectElement) => {
-    const subjectProgress = calculateSubjectProgress(subjectElement)
-    updateProgressBar(subjectElement.querySelector(".progress-bar"), subjectProgress)
-  })
+    const subjectProgress = calculateSubjectProgress(subjectElement);
+    updateProgressBar(subjectElement.querySelector(".progress-bar"), subjectProgress);
+  });
 
-  const overallProgress = calculateOverallProgress()
-  updateOverallProgress(overallProgress)
+  const overallProgress = calculateOverallProgress();
+  updateOverallProgress(overallProgress);
 }
 
 function calculateSubjectProgress(subjectElement) {
@@ -526,25 +522,26 @@ function updateProgressBar(progressBarElement, progress) {
 }
 
 function updateOverallProgress(progress) {
-  const overallProgressElement = document.getElementById("overall-progress");
-  if (!overallProgressElement) {
-    // Create overall progress element if it doesn't exist
-    const progressElement = document.createElement("div");
-    progressElement.id = "overall-progress";
-    progressElement.innerHTML = `
-      <h2>Overall Progress</h2>
-      <div class="progress-bar">
-        <div class="progress" style="width: ${progress * 100}%" data-progress="${(progress * 100).toFixed(2)}%"></div>
-      </div>
-      <p>${(progress * 100).toFixed(2)}% of total syllabus completed</p>
-    `;
-    document.body.insertBefore(progressElement, document.body.firstChild);
+  const overallProgressBar = document.getElementById("overall-progress").querySelector(".progress");
+  const overallProgressText = document.getElementById("overall-progress-text");
+  const progressPercentage = (progress * 100).toFixed(2);
+
+  console.log(`Updating overall progress to ${progressPercentage}%`); // Debugging log
+
+  // Update the progress bar width
+  overallProgressBar.style.width = `${progressPercentage}%`;
+
+  // Update the progress text
+  overallProgressText.textContent = `${progressPercentage}% of total syllabus completed`;
+
+  // Add a checkmark when progress reaches 100%
+  if (progressPercentage >= 100) {
+    overallProgressText.innerHTML += ` <span class="checkmark">✔️</span>`;
   } else {
-    // Update existing overall progress element
-    const progressBar = overallProgressElement.querySelector(".progress");
-    progressBar.style.width = `${progress * 100}%`;
-    progressBar.setAttribute("data-progress", `${(progress * 100).toFixed(2)}%`);
-    overallProgressElement.querySelector("p").textContent = `${(progress * 100).toFixed(2)}% of total syllabus completed`;
+    const checkmark = overallProgressText.querySelector(".checkmark");
+    if (checkmark) {
+      checkmark.remove();
+    }
   }
 }
 
