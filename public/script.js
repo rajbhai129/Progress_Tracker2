@@ -489,6 +489,12 @@ function calculateChapterProgress(chapterElement) {
   let totalProgress = 0;
   let totalWeightage = 0;
 
+  if (components.length === 0) {
+    // If no components, consider the chapter as 100% complete if its checkbox is checked
+    const chapterCheckbox = chapterElement.querySelector("input[type='checkbox']");
+    return chapterCheckbox && chapterCheckbox.checked ? 1 : 0;
+  }
+
   components.forEach((component) => {
     const weightage = Number.parseFloat(component.textContent.match(/(\d+(?:\.\d+)?)%/)[1]);
     const completed = component.querySelector("input").checked;
