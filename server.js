@@ -19,7 +19,8 @@ console.log("DATABASE_URL:", process.env.DATABASE_URL);
 // Create a PostgreSQL pool using the DATABASE_URL with SSL enabled
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }
+  ssl: { rejectUnauthorized: false },
+  connectionTimeoutMillis: 5000,
 });
 
 pool.connect()
