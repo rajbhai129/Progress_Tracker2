@@ -19,6 +19,7 @@
     "express-session": "^1.18.1",
     "pg": "^8.7.1",
     "postgresql": "^0.0.1",
+    "psql": "^0.0.1",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
