@@ -14,6 +14,10 @@ function isAccordionOpen(id) {
 
 document.addEventListener("DOMContentLoaded", () => {
   fetchChaptersAndComponents();
+
+  // Add event listener for the add subject form
+  const addSubjectForm = document.getElementById("add-subject-form");
+  addSubjectForm.addEventListener("submit", addSubject);
 });
 
 async function fetchChaptersAndComponents() {
@@ -228,9 +232,9 @@ function createComponentElement(component, chapterElement) {
 }
 
 async function addSubject(event) {
-  event.preventDefault()
-  const form = event.target
-  const formData = new FormData(form)
+  event.preventDefault();
+  const form = event.target;
+  const formData = new FormData(form);
 
   try {
     const response = await fetch("/add-subject", {
@@ -239,16 +243,16 @@ async function addSubject(event) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(Object.fromEntries(formData)),
-    })
+    });
 
     if (response.ok) {
-      form.reset()
-      fetchChaptersAndComponents()
+      form.reset();
+      fetchChaptersAndComponents();
     } else {
-      console.error("Failed to add subject")
+      console.error("Failed to add subject");
     }
   } catch (error) {
-    console.error("Error:", error)
+    console.error("Error:", error);
   }
 }
 

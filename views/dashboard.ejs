@@ -16,7 +16,6 @@
         <a href="/logout">Logout</a>
     </nav>
 
-    <!-- Move Overall Progress Bar here -->
     <div id="progress-container">
         <h2>Overall Progress</h2>
         <div id="overall-progress" class="progress-bar">
@@ -26,7 +25,7 @@
     </div>
 
     <h2>Add Subject</h2>
-    <form id="add-subject-form" method="POST">
+    <form id="add-subject-form" method="POST" action="/add-subject">
         <input type="text" name="name" placeholder="Subject Name" required>
         <input type="number" name="weightage" placeholder="Weightage (%)" required>
         <button type="submit">Add Subject</button>
