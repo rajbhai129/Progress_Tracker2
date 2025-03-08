@@ -182,12 +182,14 @@ app.get("/dashboard", isAuthenticated, (req, res) => {
 
 app.post("/add-subject", isAuthenticated, async (req, res) => {
   const { name, weightage } = req.body;
+  console.log("Received data:", { name, weightage, userId: req.session.userId });
+
   try {
-    const result = await pool.query("INSERT INTO subjects (name, weightage, user_id) VALUES ($1, $2, $3) RETURNING *", [
-      name,
-      weightage,
-      req.session.userId,
-    ]);
+    const result = await pool.query(
+      "INSERT INTO subjects (name, weightage, user_id) VALUES ($1, $2, $3) RETURNING *",
+      [name, weightage, req.session.userId]
+    );
+    console.log("Subject added:", result.rows[0]);
     res.status(201).json(result.rows[0]);
   } catch (err) {
     console.error("Error adding subject:", err);
