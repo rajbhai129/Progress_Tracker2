@@ -13,6 +13,9 @@ const app = express();
 const port = process.env.PORT || 3000;
 app.set("trust proxy", 1);
 
+// Set NODE_TLS_REJECT_UNAUTHORIZED to '0' to disable SSL verification
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 // Log the DATABASE_URL for debugging
 console.log("DATABASE_URL:", process.env.DATABASE_URL);
 
@@ -21,7 +24,6 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false,
-    ca: fs.readFileSync('path/to/cacert.pem') // Load CA certificate
   },
   connectionTimeoutMillis: 5000, // Increase timeout to 5 seconds
 });
