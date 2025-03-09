@@ -14,10 +14,6 @@ function isAccordionOpen(id) {
 
 document.addEventListener("DOMContentLoaded", () => {
   fetchChaptersAndComponents();
-
-  // Add event listener for the add subject form
-  const addSubjectForm = document.getElementById("add-subject-form");
-  addSubjectForm.addEventListener("submit", addSubject);
 });
 
 async function fetchChaptersAndComponents() {
@@ -574,6 +570,42 @@ function updateChapterCheckbox(chapterElement) {
   const allChecked = Array.from(components).every(checkbox => checkbox.checked);
 
   chapterCheckbox.checked = allChecked;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  fetchProgressData();
+});
+
+async function fetchProgressData() {
+  try {
+    const response = await fetch("/get-structure");
+    const data = await response.json();
+
+    const subjectsProgressContainer = document.getElementById("subjects-progress");
+    subjectsProgressContainer.innerHTML = "";
+
+    let overallProgress = 0;
+    let overallWeightage = 0;
+
+    data.subjects.forEach((subject, index) => {
+      setTimeout(() => {
+        const subjectProgress = calculateSubjectProgress(subject);
+        overallProgress += subjectProgress * subject.weightage;
+        overallWeightage += Number.parseFloat(subject.weightage);
+
+        const subjectElement = createProgressElement(subject, subjectProgress);
+        subjectsProgressContainer.appendChild(subjectElement);
+
+        // Update overall progress after each subject is added
+        if (index === data.subjects.length - 1) {
+          const totalProgress = overallWeightage > 0 ? overallProgress / overallWeightage : 0;
+          updateOverallProgress(totalProgress);
+        }
+      }, index * 100); // Delayed appearance for smooth effect
+    });
+  } catch (error) {
+    console.error("Error fetching progress data:", error);
+  }
 }
 
 
